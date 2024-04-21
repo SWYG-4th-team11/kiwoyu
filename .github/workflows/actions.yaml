@@ -27,4 +27,4 @@ jobs:
 
 
       - name: Build with Gradle
-        run: ../kiwoyu/gradlew build
+        run: kiwoyu/gradlew build
