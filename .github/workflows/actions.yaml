@@ -25,7 +25,10 @@ jobs:
       - name: Check dir
         run: pwd && ls
 
-
       - name: Build with Gradle
         working-directory: ./kiwoyu
         run: ./gradlew build
+
+      - name: Check lib
+        working-directory: ./kiwoyu/build/libs
+        run: pwd && ls
