@@ -36,7 +36,6 @@ jobs:
   Deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-    working-directory: ./kiwoyu/build/libs
 
     steps:
       - uses: actions/checkout@v2
@@ -45,7 +44,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           HOSTNAME: ${{secrets.EC2_SSH_HOST}}
           USER_NAME: ${{secrets.EC2_USER_NAME}}
-
+        working-directory: ./kiwoyu/build/libs
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           scp *.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i private_key            
