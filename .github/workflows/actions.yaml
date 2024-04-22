@@ -38,7 +38,7 @@ jobs:
           
           echo "---build complete---"
           cd build/libs 
-          bash -c "echo $PRIVATE_KEY" > pk.pem
+          bash -c "touch pk.pem && echo $PRIVATE_KEY >> pk.pem"
           ls pk.pem
           chmod 600 pk.pem
           scp *.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i pk.pem
