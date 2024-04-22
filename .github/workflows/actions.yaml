@@ -30,21 +30,22 @@ jobs:
       - name: Check dir
         run: pwd && ls
 
-      - name: Build and Deploy
-        shell: bash
+      - name: Build
         working-directory: ./kiwoyu
-        run: | 
-          ./gradlew build
-          
-          echo "---build complete---"
-          cd build/libs 
-          echo "$PRIVATE_KEY" > pk.pem && chmod 600 pk.pem
-          scp *.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i pk.pem
-          ssh -o StrictHostKeyChecking=no -i pk.pem ${USER_NAME}@${HOSTNAME} '
-            sudo ls /etc
-            pwd
-            java --version
-            '
+        run: ./gradlew build
+
+
+      - uses: actions/checkout@v4
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_USER_NAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          port: ${{ secrets.PORT }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/app/kiwoyu-0.0.1-SNAPSHOT.jar"
 
 
 #      - name: Deploy
