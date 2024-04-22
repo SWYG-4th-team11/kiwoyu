@@ -37,24 +37,26 @@ jobs:
       - shell: bash
         run: |
           pwd && ls && ls kiwoyu 
+          ls kiwoyu/build/libs
 
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
           name: kiwoyu_jar
           path: kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar
+          retention-days: 2
 
-#      - uses: actions/checkout@v4
-#      - name: copy file via ssh password
-#        uses: appleboy/scp-action@v0.1.7
-#        with:
-#          host: ${{ secrets.EC2_SSH_HOST }}
-#          username: ${{ secrets.EC2_USER_NAME }}
-##          password: ${{ secrets.PASSWORD }}
-##          port: ${{ secrets.PORT }}
-#          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-#          source: "kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar"
-#          target: "/home/ubuntu/app/kiwoyu-0.0.1-SNAPSHOT.jar"
+      - uses: actions/checkout@v4
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_USER_NAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          port: ${{ secrets.PORT }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/app/kiwoyu-0.0.1-SNAPSHOT.jar"
 
 
 #      - name: Deploy
