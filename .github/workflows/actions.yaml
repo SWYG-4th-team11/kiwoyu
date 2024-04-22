@@ -36,13 +36,13 @@ jobs:
 
       - uses: actions/checkout@v2
       - name: Deploy
-        working-directory: ./kiwoyu/build/libs
+#        working-directory: ./kiwoyu/build/libs
         run: | 
           pwd && ls
           touch pk.pem
           echo "$PRIVATE_KEY" >> pk.pem 
           chmod 600 pk.pem
-          scp *.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i pk.pem            
+          scp kiwoyu/build/libs/*.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i pk.pem            
           ssh -o StrictHostKeyChecking=no -i pk.pem ${USER_NAME}@${HOSTNAME} '
               sudo ls /etc
               pwd
