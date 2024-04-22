@@ -34,6 +34,7 @@ jobs:
         working-directory: ./kiwoyu
         run: ./gradlew build
 
+      - uses: actions/checkout@v2
       - name: Deploy
         working-directory: ./kiwoyu/build/libs
         run: | 
