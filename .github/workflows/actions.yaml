@@ -33,13 +33,7 @@ jobs:
         working-directory: ./kiwoyu/build/libs
         run: pwd && ls
 
-  Deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build & Deploy
+      - name: Deploy
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           HOSTNAME: ${{secrets.EC2_SSH_HOST}}
