@@ -34,11 +34,12 @@ jobs:
         run: pwd && ls
 
       - name: Deploy
+        uses: actions/checkout@v4
+        working-directory: ./kiwoyu/build/libs
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           HOSTNAME: ${{secrets.EC2_SSH_HOST}}
           USER_NAME: ${{secrets.EC2_USER_NAME}}
-        working-directory: ./kiwoyu/build/libs
         run: |
           touch pk.pem
           echo "$PRIVATE_KEY" >> pk.pem 
