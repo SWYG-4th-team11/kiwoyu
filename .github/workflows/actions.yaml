@@ -11,6 +11,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      HOSTNAME: ${{secrets.EC2_SSH_HOST}}
+      USER_NAME: ${{secrets.EC2_USER_NAME}}
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -29,18 +34,10 @@ jobs:
         working-directory: ./kiwoyu
         run: ./gradlew build
 
-      - name: Check lib
-        working-directory: ./kiwoyu/build/libs
-        run: pwd && ls
-
-      - uses: actions/checkout@v4
       - name: Deploy
-        working-directory: build/libs
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{secrets.EC2_SSH_HOST}}
-          USER_NAME: ${{secrets.EC2_USER_NAME}}
-        run: |
+        working-directory: ./kiwoyu/build/libs
+        run: | 
+          pwd && ls
           touch pk.pem
           echo "$PRIVATE_KEY" >> pk.pem 
           chmod 600 pk.pem
