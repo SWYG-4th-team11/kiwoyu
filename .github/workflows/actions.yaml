@@ -34,7 +34,7 @@ jobs:
         working-directory: ./kiwoyu
         run: |
           ./gradlew build
-          cp kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar ./
+          cp build/libs/kiwoyu-0.0.1-SNAPSHOT.jar ../
 
 #      - shell: bash
 #        run: |
@@ -50,12 +50,20 @@ jobs:
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
-          working-directory:
           host: ${{ secrets.EC2_SSH_HOST }}
           username: ${{ secrets.EC2_USER_NAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: "kiwoyu-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/app/"
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_USER_NAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            java -jar ~/kiwoyu-0.0.1-SNAPSHOT.jar
 
 #      - name: Deploy
 ##        working-directory: kiwoyu/build/libs
