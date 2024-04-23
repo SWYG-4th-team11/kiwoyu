@@ -32,12 +32,13 @@ jobs:
 
       - name: Build
         working-directory: ./kiwoyu
-        run: ./gradlew build
-
-      - shell: bash
         run: |
-          pwd && ls && ls kiwoyu 
-          ls kiwoyu/build/libs
+          ./gradlew build
+          cp kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar ./
+
+#      - shell: bash
+#        run: |
+#
 
 #      - name: Upload jar
 #        uses: actions/upload-artifact@v4
@@ -49,15 +50,12 @@ jobs:
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
-          working-directory: kiwoyu/build/libs
+          working-directory:
           host: ${{ secrets.EC2_SSH_HOST }}
           username: ${{ secrets.EC2_USER_NAME }}
-#          password: ${{ secrets.PASSWORD }}
-#          port: ${{ secrets.PORT }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: "kiwoyu-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/app"
-
+          target: "/home/ubuntu/app/"
 
 #      - name: Deploy
 ##        working-directory: kiwoyu/build/libs
