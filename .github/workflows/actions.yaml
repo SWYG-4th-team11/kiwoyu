@@ -40,12 +40,12 @@ jobs:
 #        run: |
 #
 
-#      - name: Upload jar
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: kiwoyu_jar
-#          path: kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar
-#          retention-days: 1
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiwoyu_jar
+          path: kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar
+          retention-days: 1
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
