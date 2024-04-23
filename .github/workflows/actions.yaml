@@ -36,10 +36,6 @@ jobs:
           ./gradlew build
           cp build/libs/kiwoyu-0.0.1-SNAPSHOT.jar ../
 
-#      - shell: bash
-#        run: |
-#
-
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:
@@ -63,17 +59,5 @@ jobs:
           username: ${{ secrets.EC2_USER_NAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            bash /home/ubuntu/app/scripts/start.sh
-
-#      - name: Deploy
-##        working-directory: kiwoyu/build/libs
-#        run: |
-#          pwd && ls kiwoyu/build/libs
-#          bash -c "echo $PRIVATE_KEY > pk.pem"
-#          chmod 600 pk.pem
-#          scp *.jar ${USER_NAME}@${HOSTNAME}:~/ -o StrictHostKeyChecking=no -i pk.pem
-#          ssh -o StrictHostKeyChecking=no -i pk.pem ${USER_NAME}@${HOSTNAME} '
-#              sudo ls /etc
-#              pwd
-#              java --version
-#              '
+            whoami
+            cd /home/ubuntu/app/scripts && ./start.sh
