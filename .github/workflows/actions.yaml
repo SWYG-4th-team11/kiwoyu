@@ -44,9 +44,8 @@ jobs:
         with:
           name: kiwoyu_jar
           path: kiwoyu/build/libs/kiwoyu-0.0.1-SNAPSHOT.jar
-          retention-days: 2
+          retention-days: 1
 
-      - uses: actions/checkout@v4
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
