@@ -1,7 +1,6 @@
 package com.swyp.kiwoyu.goal.repository;
 
 import com.swyp.kiwoyu.goal.domain.Goal;
-import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
