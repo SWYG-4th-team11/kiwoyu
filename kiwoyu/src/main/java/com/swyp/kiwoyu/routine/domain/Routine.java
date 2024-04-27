@@ -26,7 +26,7 @@ public class Routine extends BaseEntity {
 
     private Boolean isChecked;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date routine_date;
 
     // Foreign key

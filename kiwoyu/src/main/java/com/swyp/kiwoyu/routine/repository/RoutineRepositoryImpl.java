@@ -1,5 +1,7 @@
 package com.swyp.kiwoyu.routine.repository;
 
+import com.swyp.kiwoyu.mandalart.domain.Mandalart;
+import com.swyp.kiwoyu.mandalart.repository.MandalartRepository;
 import com.swyp.kiwoyu.routine.domain.Routine;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.repository.UserRepository;
@@ -9,6 +11,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
 
@@ -17,19 +23,24 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
     @Autowired
     UserRepository ur ;
     @Autowired
+    MandalartRepository mr ;
+    @Autowired
     @Lazy
-    RoutineRepository mr ;
+    RoutineRepository rr ;
 
     @Autowired
     public RoutineRepositoryImpl(JpaContext context) {
         this.em = context.getEntityManagerByManagedType(Routine.class);
     }
 
-
-    public Routine createOrUpdateRoutineWithUserId(Routine routine, Long userId) {
+    @Override
+    public Routine upsertRoutineWithUserAndMandalart(Routine routine, Long userId, Long mandalartId) {
         User user = ur.findById(userId).orElseThrow();
-        routine.setUser(user);
+        Mandalart mandalart = mr.findById(mandalartId).orElseThrow();
 
-        return mr.save(routine);
+        routine.setUser(user);
+        routine.setMandalart(mandalart);
+        return rr.save(routine);
     }
+
 }

@@ -6,6 +6,8 @@ import com.swyp.kiwoyu.routine.repository.RoutineRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,10 +30,15 @@ public class RoutineService {
         return routineRepository.save(routine);
     }
 
-    public Routine createOrUpdateRoutineWithUserId(Routine routine, Long userId) {
-        return routineRepository.createOrUpdateRoutineWithUserId(routine,userId);
+    public Routine upsertRoutineWithUserAndMandalart(Routine routine, Long userId, Long mandalartId) {
+        return routineRepository.upsertRoutineWithUserAndMandalart(routine,userId, mandalartId);
     }
-        public void deleteRoutine(Long id) {
+    public Collection<Routine> getRoutinesByUserMandalartAndDate(Long userId, Long mandalartId, Date routineDate){
+        return routineRepository.findByUserMandalartAndDate(userId, mandalartId, routineDate);
+    }
+
+
+    public void deleteRoutine(Long id) {
         routineRepository.deleteById(id);
     }
 }
