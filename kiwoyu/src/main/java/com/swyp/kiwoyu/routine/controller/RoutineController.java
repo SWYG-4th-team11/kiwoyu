@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,16 +25,23 @@ public class RoutineController {
 //        return new ResponseEntity<>(routines, HttpStatus.OK);
 //    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Routine> getRoutineById(@PathVariable("id") Long id) {
-        Optional<Routine> routine = routineService.getRoutineById(id);
-        return routine.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Routine> getRoutineById(@PathVariable("id") Long id) {
+//        Optional<Routine> routine = routineService.getRoutineById(id);
+//        return routine.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
+
+
+    @GetMapping("/{userId}&{mandalartId}&{routineDate}")
+    public ResponseEntity<Collection<Routine>> getRoutineByIdAndDate(@PathVariable("userId") Long userId, @PathVariable("mandalartId") Long mandalartId, @PathVariable("routineDate") Date routineDate) {
+        Collection<Routine> routine = routineService.getRoutinesByUserMandalartAndDate(userId,mandalartId, routineDate);
+        return new ResponseEntity<>(routine, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Routine> createRoutine(@RequestBody Routine routine, Long userId) {
-        Routine createdRoutine = routineService.createOrUpdateRoutineWithUserId(routine, userId);
+    public ResponseEntity<Routine> createRoutine(@RequestBody Routine routine, @RequestBody Long userId, @RequestBody Long mandalartId) {
+        Routine createdRoutine = routineService.upsertRoutineWithUserAndMandalart(routine, userId, mandalartId);
         return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
     }
 
