@@ -25,12 +25,14 @@ public class SecurityConfig {
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
+
+        // 인증 예외 처리
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-                        .requestMatchers("/v3/api-docs/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
-                        .requestMatchers("/swagger-ui/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/**").permitAll() // '/api/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/v3/api-docs/**").permitAll() // 'swagger' 관련 페이지 요청 허가
+                        .requestMatchers("/swagger-ui/**").permitAll() // 'swagger' 페이지 요청 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
         return http.build();

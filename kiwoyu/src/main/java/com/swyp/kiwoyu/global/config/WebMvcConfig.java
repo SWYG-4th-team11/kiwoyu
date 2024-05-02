@@ -15,4 +15,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000");
 
     }
+
+
 }
