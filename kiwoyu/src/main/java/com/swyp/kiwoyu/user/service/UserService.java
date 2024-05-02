@@ -53,6 +53,8 @@ public class UserService {
             User user = userOptional.get();
             // 비밀번호 검증
             if (user.getPassword().equals(loginRequest.getPassword())) {
+                /* 1. 비밀번호가 일치할 시, JWT 생성 */
+                /* 2. API에 JWT return */
                 // 비밀번호가 일치할시 해당 사용자 반환
                 return user;
             }
