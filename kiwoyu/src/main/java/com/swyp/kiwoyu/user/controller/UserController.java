@@ -63,7 +63,7 @@ public class UserController {
         Optional<User> existingUser = userService.getUserById(id);
         if (existingUser.isPresent()) { //사용자 존재할시
             user.setId(id);
-            User updatedUser = userService.createOrUpdateUser(user);
+            User updatedUser = userService.updateUser(id, user);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  //그런회원은없음
@@ -82,16 +82,16 @@ public class UserController {
         }
     }
 
-    @GetMapping("/info/{email}")
-    public ResponseEntity<User> getUserInfoByEmail(@PathVariable String email) {
-        // 이메일을 기반으로 사용자 정보를 가져옴
-        Optional<User> userOptional = userService.getUserByEmail(email);
-
-        if (userOptional.isPresent()) {
-            return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
-        } else {
-            // 해당 이메일을 가진 사용자를 찾을 수 없는 경우
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/info/{email}")
+//    public ResponseEntity<User> getUserInfoByEmail(@PathVariable String email) {
+//        // 이메일을 기반으로 사용자 정보를 가져옴
+//        Optional<User> userOptional = userService.getUserByEmail(email);
+//
+//        if (userOptional.isPresent()) {
+//            return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+//        } else {
+//            // 해당 이메일을 가진 사용자를 찾을 수 없는 경우
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }
