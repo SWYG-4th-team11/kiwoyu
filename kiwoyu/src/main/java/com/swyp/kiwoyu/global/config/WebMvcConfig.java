@@ -1,18 +1,26 @@
 package com.swyp.kiwoyu.global.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowedOrigins("http://localhost:3000");
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CustomJwtInterceptor())
+                /* 계정 없는 상태에서 사용 가능한 토큰 */
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("/api/user/login")
+                .excludePathPatterns("/api/user/signup")
+                .excludePathPatterns("/api/user/logout")
+                .excludePathPatterns("/swagget-ui/*")
+                .excludePathPatterns("/v3/*");
+
+        registry.addInterceptor(new CustomJwtPostInterceptor())
+                .addPathPatterns("/api/user/login");
 
     }
 }

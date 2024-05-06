@@ -1,4 +1,4 @@
-package com.swyp.kiwoyu.user.email.domain;
+package com.swyp.kiwoyu.email.domain;
 
 
 import lombok.Builder;

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "user")
 @Getter
@@ -25,5 +27,7 @@ public class User extends BaseEntity {
     private String nickname;
 
     private Boolean isDeleted;
+
+    private Date createdAt;
 
 }

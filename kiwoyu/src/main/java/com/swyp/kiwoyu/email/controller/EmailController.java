@@ -1,9 +1,9 @@
-package com.swyp.kiwoyu.user.email.controller;
+package com.swyp.kiwoyu.email.controller;
 
-import com.swyp.kiwoyu.user.email.domain.EmailMessage;
-import com.swyp.kiwoyu.user.email.dto.EmailPostDto;
-import com.swyp.kiwoyu.user.email.dto.EmailResponseDto;
-import com.swyp.kiwoyu.user.email.service.EmailService;
+import com.swyp.kiwoyu.email.domain.EmailMessage;
+import com.swyp.kiwoyu.email.dto.EmailPostDto;
+import com.swyp.kiwoyu.email.dto.EmailResponseDto;
+import com.swyp.kiwoyu.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/send-mail")
 @RestController
+@RequestMapping("/api/send-mail")
 @RequiredArgsConstructor
 public class EmailController {
 

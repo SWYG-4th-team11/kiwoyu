@@ -1,4 +1,4 @@
-package com.swyp.kiwoyu.user.email.dto;
+package com.swyp.kiwoyu.email.dto;
 
 import lombok.Getter;
 

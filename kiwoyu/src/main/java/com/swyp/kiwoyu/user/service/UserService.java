@@ -1,6 +1,8 @@
 package com.swyp.kiwoyu.user.service;
+import com.swyp.kiwoyu.jwt.JwtProvider;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.LoginRequest;
+import com.swyp.kiwoyu.user.dto.LoginResponse;
 import com.swyp.kiwoyu.user.dto.SignUpRequest;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,11 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public User createOrUpdateUser(User user){
+        return userRepository.save(user);
+    }
+
 
     //로그인
     public User authenticate(LoginRequest loginRequest) {
@@ -85,11 +92,18 @@ public class UserService {
             existingUser.setNickname(updatedUser.getNickname());
             existingUser.setPassword(updatedUser.getPassword());
             return userRepository.save(existingUser);
-
         } else {
             throw new IllegalArgumentException("User not found");
         }
     }
+
+    public LoginResponse generateLoginResponse(User user){
+
+        String token = JwtProvider.getInstance().createToken(user.getEmail());
+        System.out.println("login success token: "+token);
+        return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token, user.getCreatedAt());
+    }
+    // 마이페이지 정보 수정
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);

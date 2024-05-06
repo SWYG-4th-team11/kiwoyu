@@ -1,6 +1,6 @@
-package com.swyp.kiwoyu.user.email.service;
+package com.swyp.kiwoyu.email.service;
 
-import com.swyp.kiwoyu.user.email.domain.EmailMessage;
+import com.swyp.kiwoyu.email.domain.EmailMessage;
 import com.swyp.kiwoyu.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
