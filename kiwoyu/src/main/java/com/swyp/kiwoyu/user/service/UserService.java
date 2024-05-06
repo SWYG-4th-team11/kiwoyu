@@ -55,12 +55,6 @@ public class UserService {
             User user = userOptional.get();
             // 비밀번호 검증
             if (user.getPassword().equals(loginRequest.getPassword())) {
-                /* 1. 비밀번호가 일치할 시, JWT 생성 */
-                String token = JwtProvider.getInstance().createToken(user.getEmail());
-                System.out.println("login success token: "+token);
-                /* 2. API에 JWT return */
-
-                // 비밀번호가 일치할시 해당 사용자 반환
                 return user;
             }
         }
@@ -72,7 +66,6 @@ public class UserService {
 
         String token = JwtProvider.getInstance().createToken(user.getEmail());
         System.out.println("login success token: "+token);
-
         return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token);
     }
     // 마이페이지 정보 수정

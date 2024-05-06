@@ -13,9 +13,7 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        System.out.println("----filter start");
         chain.doFilter(request, response);
-        System.out.println("doFilter--end");
     }
 
     public void init(FilterConfig filterConfiguration) {

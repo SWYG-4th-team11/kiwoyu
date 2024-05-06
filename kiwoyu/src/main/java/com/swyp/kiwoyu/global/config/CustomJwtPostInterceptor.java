@@ -24,7 +24,7 @@ public class CustomJwtPostInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            @Nullable ModelAndView modelAndView) throws Exception {
-        System.out.println("----interceptor2 start");
+//        System.out.println("----interceptor2 start");
 
         if(response.getStatus() != 200){
             return;

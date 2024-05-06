@@ -42,7 +42,7 @@ public class RoutineService {
         return routineRepository.upsertRoutineWithUserAndMandalart(newRoutine,dto.getUserId(), dto.getMandalartId());
     }
     public List<RoutineDto> getRoutinesByUserMandalartAndDate(Long userId, Long mandalartId, Date routineDate){
-        System.out.println("getRoutinesByUserMandalartAndDate--start");
+//        System.out.println("getRoutinesByUserMandalartAndDate--start");
 
         List<Routine> routines =  routineRepository.findByUserMandalartAndDate(userId, mandalartId, routineDate);
         List<RoutineDto> res;
