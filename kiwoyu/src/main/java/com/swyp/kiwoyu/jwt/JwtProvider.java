@@ -87,7 +87,7 @@ public class JwtProvider {
 //            System.out.println("----ValidateToken");
 //            System.out.println(this.createToken("admin"));
             if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
-                System.out.println("----Bearer is missing");
+//                System.out.println("----Bearer is missing");
                 return false;
             } else {
                 token = token.split(" ")[1].trim();
@@ -98,7 +98,7 @@ public class JwtProvider {
             // 만료되었을 시 false
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
-            System.out.println("----" + e.getMessage());
+//            System.out.println("----" + e.getMessage());
             return false;
         }
     }

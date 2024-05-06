@@ -44,12 +44,12 @@ public class RoutineController {
     public ResponseEntity<PostRoutineByIdAndDateResponseDto> postRoutineByIdAndDate(
             @RequestBody PostRoutineByIdAndDateRequestDto dto
     ) {
-        System.out.println("postRoutineByIdAndDate--start");
+//        System.out.println("postRoutineByIdAndDate--start");
         List<RoutineDto> routine = routineService.getRoutinesByUserMandalartAndDate(dto.getUserId(),dto.getMandalartId(), dto.getRoutineDate());
         PostRoutineByIdAndDateResponseDto responseDto = new PostRoutineByIdAndDateResponseDto();
         responseDto.setRoutines(routine);
-        System.out.println(routine);
-        System.out.println("postRoutineByIdAndDate--end");
+//        System.out.println(routine);
+//        System.out.println("postRoutineByIdAndDate--end");
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

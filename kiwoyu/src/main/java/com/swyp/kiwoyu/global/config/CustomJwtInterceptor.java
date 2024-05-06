@@ -30,11 +30,11 @@ public class CustomJwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        System.out.println("----interceptor start");
-        System.out.println(jp.createToken("admin"));
+//        System.out.println("----interceptor start");
+//        System.out.println(jp.createToken("admin"));
         /* Check Token */
         String raw = jp.resolveToken(request);
-        System.out.println(raw);//FIXME:: delete
+//        System.out.println(raw);//FIXME:: delete
 
         if (raw==null || raw.length() == 0){
             System.out.println("----Error: token is not found.");
@@ -51,7 +51,7 @@ public class CustomJwtInterceptor implements HandlerInterceptor {
                 return false;
             }
             Claims k = jp.parseToken(raw);
-            System.out.println(k.entrySet());
+//            System.out.println(k.entrySet());
         }
         return true;
     }
