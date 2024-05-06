@@ -1,8 +1,9 @@
 package com.swyp.kiwoyu.routine.controller;
 
-import com.swyp.kiwoyu.routine.domain.Routine;
+import com.swyp.kiwoyu.routine.domain.*;
 import com.swyp.kiwoyu.routine.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,15 +34,30 @@ public class RoutineController {
 //    }
 
 
-    @GetMapping("/{userId}&{mandalartId}&{routineDate}")
-    public ResponseEntity<Collection<Routine>> getRoutineByIdAndDate(@PathVariable("userId") Long userId, @PathVariable("mandalartId") Long mandalartId, @PathVariable("routineDate") Date routineDate) {
-        Collection<Routine> routine = routineService.getRoutinesByUserMandalartAndDate(userId,mandalartId, routineDate);
-        return new ResponseEntity<>(routine, HttpStatus.OK);
+//    @GetMapping("/{userId}&{mandalartId}&{routineDate}")
+//    public ResponseEntity<Collection<Routine>> getRoutineByIdAndDate(@PathVariable("userId") Long userId, @PathVariable("mandalartId") Long mandalartId,
+//                                                                     @RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") Date routineDate) {
+//        Collection<Routine> routine = routineService.getRoutinesByUserMandalartAndDate(userId,mandalartId, routineDate);
+//        return new ResponseEntity<>(routine, HttpStatus.OK);
+//    }
+    @PostMapping("/view")
+    public ResponseEntity<PostRoutineByIdAndDateResponseDto> postRoutineByIdAndDate(
+            @RequestBody PostRoutineByIdAndDateRequestDto dto
+    ) {
+        System.out.println("postRoutineByIdAndDate--start");
+        List<RoutineDto> routine = routineService.getRoutinesByUserMandalartAndDate(dto.getUserId(),dto.getMandalartId(), dto.getRoutineDate());
+        PostRoutineByIdAndDateResponseDto responseDto = new PostRoutineByIdAndDateResponseDto();
+        responseDto.setRoutines(routine);
+        System.out.println(routine);
+        System.out.println("postRoutineByIdAndDate--end");
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Routine> createRoutine(@RequestBody Routine routine, @RequestBody Long userId, @RequestBody Long mandalartId) {
-        Routine createdRoutine = routineService.upsertRoutineWithUserAndMandalart(routine, userId, mandalartId);
+
+
+    @PostMapping("/create")
+    public ResponseEntity<Routine> createRoutine(@RequestBody PostCreateRoutineRequestDto dto) {
+        Routine createdRoutine = routineService.upsertRoutineWithUserAndMandalart(dto);
         return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
     }
 

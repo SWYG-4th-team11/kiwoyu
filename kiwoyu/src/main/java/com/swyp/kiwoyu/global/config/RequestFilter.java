@@ -14,13 +14,8 @@ public class RequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         System.out.println("----filter start");
-
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        request = new RequestWrapper(httpServletRequest);
-
-        System.out.println(request);
-
         chain.doFilter(request, response);
+        System.out.println("doFilter--end");
     }
 
     public void init(FilterConfig filterConfiguration) {

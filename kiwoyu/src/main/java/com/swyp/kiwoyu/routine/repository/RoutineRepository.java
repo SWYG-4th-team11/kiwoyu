@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface RoutineRepository extends JpaRepository<Routine, Long>, RoutineRepositoryCustom {
 
     @Query("select r from Routine r where r.user.id = :userId and r.mandalart.id = :mandalartId and r.routine_date = :routineDate")
-    Collection<Routine> findByUserMandalartAndDate(@Param("userId") Long userId, @Param("mandalartId") Long mandalartId , @Param("routineDate") Date routineDate);
+    List<Routine> findByUserMandalartAndDate(@Param("userId") Long userId, @Param("mandalartId") Long mandalartId , @Param("routineDate") Date routineDate);
 
 }

@@ -19,6 +19,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     public RequestWrapper(HttpServletRequest request) throws BadRequestException {
         super(request);
+        System.out.println("requestWrapper--start");
 
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = request.getReader()) {
@@ -28,8 +29,10 @@ public class RequestWrapper extends HttpServletRequestWrapper {
                 stringBuilder.append(charBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
+
             throw new BadRequestException();
         }
+        System.out.println("requestWrapper--end");
 
         body = stringBuilder.toString();
     }
