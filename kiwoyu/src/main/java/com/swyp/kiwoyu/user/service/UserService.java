@@ -16,6 +16,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -24,9 +25,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User createOrUpdateUser(User user){
-        return userRepository.save(user);
-    }
+    public Optional<User> getUserByNickname(String nickname) { return userRepository.findByNickname(nickname);}
 
     public Optional<User> getUserByEmail(String email) { return userRepository.findByEmail(email);}
 
@@ -46,6 +45,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User createOrUpdateUser(User user){
+        return userRepository.save(user);
+    }
+
+
     //로그인
     public User authenticate(LoginRequest loginRequest) {
         // 이메일로 사용자를 찾음
@@ -55,6 +59,7 @@ public class UserService {
             User user = userOptional.get();
             // 비밀번호 검증
             if (user.getPassword().equals(loginRequest.getPassword())) {
+                // 비밀번호가 일치할시 해당 사용자 반환
                 return user;
             }
         }
@@ -62,26 +67,43 @@ public class UserService {
         throw new IllegalArgumentException("Invalid credentials");
     }
 
-    public LoginResponse generateLoginResponse(User user){
-
-        String token = JwtProvider.getInstance().createToken(user.getEmail());
-        System.out.println("login success token: "+token);
-        return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token);
+    public void setTempPassword(String email, String tempPassword) {
+        // 이메일을 기반으로 사용자를 찾아서 임시 비밀번호를 설정합니다.
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            // 사용자가 존재하는 경우에만 임시 비밀번호를 설정합니다.
+            User user = userOptional.get();
+            user.setPassword(tempPassword);
+            // 사용자 업데이트
+            userRepository.save(user);
+        } else {
+            // 사용자를 찾을 수 없는 경우에는 예외 처리를 수행합니다.
+            throw new RuntimeException("User not found");
+        }
     }
-    // 마이페이지 정보 수정
+
+
+    // 마이페이지 정보 수정(닉네임, 비밀번호 변경 가능)
     public User updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
 
-        if (existingUserOptional.isPresent()) {
+        if (existingUserOptional.isPresent()) { //사용자 존재 할 시
             User existingUser = existingUserOptional.get();
             existingUser.setNickname(updatedUser.getNickname());
             existingUser.setPassword(updatedUser.getPassword());
-
             return userRepository.save(existingUser);
         } else {
             throw new IllegalArgumentException("User not found");
         }
     }
+
+    public LoginResponse generateLoginResponse(User user){
+
+        String token = JwtProvider.getInstance().createToken(user.getEmail());
+        System.out.println("login success token: "+token);
+        return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token, user.getCreatedAt());
+    }
+    // 마이페이지 정보 수정
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);

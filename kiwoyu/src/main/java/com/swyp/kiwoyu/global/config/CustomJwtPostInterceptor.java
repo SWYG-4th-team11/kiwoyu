@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 public class CustomJwtPostInterceptor implements HandlerInterceptor {
 
-    private String adminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJhZG1pbiIsImlhdCI6MTUxNjIzOTAyMn0.QbehVNHNdMaLry_q62ft76S8FjEfa6pjQaNtX3vpKq4";
     private final JwtProvider jp = JwtProvider.getInstance();
 
     @Override
