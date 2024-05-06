@@ -2,6 +2,7 @@ package com.swyp.kiwoyu.user.controller;
 
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.LoginRequest;
+import com.swyp.kiwoyu.user.dto.LoginResponse;
 import com.swyp.kiwoyu.user.dto.SignUpRequest;
 import com.swyp.kiwoyu.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,12 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
             // 사용자 인증
             User authenticatedUser = userService.authenticate(loginRequest);
-            return ResponseEntity.ok(authenticatedUser);
+            LoginResponse lr = userService.generateLoginResponse(authenticatedUser);
+            return ResponseEntity.ok(lr);
         } catch (IllegalArgumentException e) {
             // 인증 실패
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

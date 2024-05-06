@@ -1,6 +1,8 @@
 package com.swyp.kiwoyu.user.service;
+import com.swyp.kiwoyu.jwt.JwtProvider;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.LoginRequest;
+import com.swyp.kiwoyu.user.dto.LoginResponse;
 import com.swyp.kiwoyu.user.dto.SignUpRequest;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,10 @@ public class UserService {
             // 비밀번호 검증
             if (user.getPassword().equals(loginRequest.getPassword())) {
                 /* 1. 비밀번호가 일치할 시, JWT 생성 */
+                String token = JwtProvider.getInstance().createToken(user.getEmail());
+                System.out.println("login success token: "+token);
                 /* 2. API에 JWT return */
+
                 // 비밀번호가 일치할시 해당 사용자 반환
                 return user;
             }
@@ -63,6 +68,13 @@ public class UserService {
         throw new IllegalArgumentException("Invalid credentials");
     }
 
+    public LoginResponse generateLoginResponse(User user){
+
+        String token = JwtProvider.getInstance().createToken(user.getEmail());
+        System.out.println("login success token: "+token);
+
+        return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token);
+    }
     // 마이페이지 정보 수정
     public User updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
