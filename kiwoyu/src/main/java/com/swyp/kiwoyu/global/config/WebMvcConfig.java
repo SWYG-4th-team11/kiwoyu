@@ -12,7 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CustomJwtInterceptor())
                 /* 계정 없는 상태에서 사용 가능한 토큰 */
-                .addPathPatterns("/api/*")
+                .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/user/login")
                 .excludePathPatterns("/api/user/signup")
                 .excludePathPatterns("/api/user/logout")
@@ -20,8 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/v3/*");
 
         registry.addInterceptor(new CustomJwtPostInterceptor())
-                .addPathPatterns("/api/user/login")
-                .excludePathPatterns("*");
+                .addPathPatterns("/api/user/login");
 
     }
 }
