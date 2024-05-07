@@ -1,9 +1,7 @@
 package com.swyp.kiwoyu.user.service;
 import com.swyp.kiwoyu.jwt.JwtProvider;
 import com.swyp.kiwoyu.user.domain.User;
-import com.swyp.kiwoyu.user.dto.LoginRequest;
-import com.swyp.kiwoyu.user.dto.LoginResponse;
-import com.swyp.kiwoyu.user.dto.SignUpRequest;
+import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,5 +105,19 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Boolean checkUniqueNickname(CheckUniqueNicknameRequestDto dto){
+        Boolean res = true;
+        String nickname = dto.getNickName();
+        res = userRepository.existsByNickname(nickname);
+        return res;
+    }
+    public User updateUniqueNickname(PutUserNickNameRequestDto dto){
+        User user = userRepository.findById(dto.getUserId()).orElse(null);
+        user.setNickname(dto.getNickName());
+        userRepository.save(user);
+        user = userRepository.findById(dto.getUserId()).orElse(null);
+        return user;
     }
 }
