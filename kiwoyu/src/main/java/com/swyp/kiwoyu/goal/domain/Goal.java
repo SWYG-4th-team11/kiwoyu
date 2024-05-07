@@ -1,11 +1,16 @@
 package com.swyp.kiwoyu.goal.domain;
 
 import com.swyp.kiwoyu.global.common.BaseEntity;
+import com.swyp.kiwoyu.goal.dto.UpdateGoalRequestDto;
 import com.swyp.kiwoyu.mandalart.domain.Mandalart;
 import com.swyp.kiwoyu.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "goal")
@@ -17,6 +22,10 @@ public class Goal extends BaseEntity {
     private Long id;
 
     @Column(columnDefinition = "VARCHAR(255)")
+    private String title;
+
+    // main, middle, small
+    @Column(columnDefinition = "VARCHAR(255)")
     private String type;
 
     @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
@@ -24,6 +33,10 @@ public class Goal extends BaseEntity {
 
     // 대목표 -> null / 중목표 -> 상위 대목표의 ID / 소목표 -> 상위 중목표의 ID
     private Long parentGoalId;
+
+    private Date goalDate;
+
+    private Boolean isAchieved;
 
     // Foreign key
     @ManyToOne(fetch=FetchType.LAZY)
@@ -35,4 +48,20 @@ public class Goal extends BaseEntity {
     @JoinColumn(name="mandalart_id")
     private Mandalart mandalart;
 
+    public Goal(Goal goal, UpdateGoalRequestDto dto){
+        this.id = dto.getId();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.goalDate = dto.getGoalDate();
+        this.isAchieved = dto.isAchieved();
+
+        this.type=goal.getType();
+        this.parentGoalId=goal.getParentGoalId();
+        this.user=goal.getUser();
+        this.mandalart=goal.getMandalart();
+    }
+
+    public Goal() {
+
+    }
 }
