@@ -1,6 +1,8 @@
 package com.swyp.kiwoyu.goal.controller;
 
 import com.swyp.kiwoyu.goal.domain.Goal;
+import com.swyp.kiwoyu.goal.dto.UpdateGoalRequestDto;
+import com.swyp.kiwoyu.goal.dto.UpdateGoalResponseDto;
 import com.swyp.kiwoyu.goal.service.GoalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,16 @@ public class GoalController {
             goal.setId(id);
             Goal updatedGoal = goalService.createOrUpdateGoal(goal);
             return new ResponseEntity<>(updatedGoal, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<UpdateGoalResponseDto> updateGoalAsDto(@RequestBody UpdateGoalRequestDto dto) {
+        UpdateGoalResponseDto res = goalService.updateGoal(dto);
+        if (res != null) {
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

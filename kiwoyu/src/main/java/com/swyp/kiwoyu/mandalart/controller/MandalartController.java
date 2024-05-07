@@ -1,6 +1,7 @@
 package com.swyp.kiwoyu.mandalart.controller;
 
 import com.swyp.kiwoyu.mandalart.domain.Mandalart;
+import com.swyp.kiwoyu.mandalart.dto.UpdateMandalartRequestDto;
 import com.swyp.kiwoyu.mandalart.service.MandalartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,17 @@ public class MandalartController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/category")
+    public ResponseEntity<UpdateMandalartRequestDto> updateMandalartCategory(@RequestBody UpdateMandalartRequestDto dto ) {
+        UpdateMandalartRequestDto res = mandalartService.updateMandalartCategory(dto);
+        if (res != null) {
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMandalart(@PathVariable("id") Long id) {
