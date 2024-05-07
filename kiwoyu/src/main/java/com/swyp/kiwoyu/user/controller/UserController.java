@@ -1,10 +1,7 @@
 package com.swyp.kiwoyu.user.controller;
 
 import com.swyp.kiwoyu.user.domain.User;
-import com.swyp.kiwoyu.user.dto.CheckUniqueNicknameRequestDto;
-import com.swyp.kiwoyu.user.dto.LoginRequest;
-import com.swyp.kiwoyu.user.dto.LoginResponse;
-import com.swyp.kiwoyu.user.dto.SignUpRequest;
+import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +51,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/check-unique/nickname")
+    // 닉네임 중복체크
+    @PostMapping("/nickname/check-unique")
     public ResponseEntity<Boolean> checkUniqueNickname(@RequestBody CheckUniqueNicknameRequestDto dto) {
         try {
             // 사용자 인증
@@ -65,7 +63,17 @@ public class UserController {
         }
     }
 
-
+    // 닉네임 변경
+    @PutMapping("/nickname")
+    public ResponseEntity<User> putUserNickName(@RequestBody PutUserNickNameRequestDto dto) {
+        try {
+            // 사용자 인증
+            User user = userService.updateUniqueNickname(dto);
+            return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
     //로그아웃
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
