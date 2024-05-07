@@ -1,6 +1,7 @@
 package com.swyp.kiwoyu.user.controller;
 
 import com.swyp.kiwoyu.user.domain.User;
+import com.swyp.kiwoyu.user.dto.CheckUniqueNicknameRequestDto;
 import com.swyp.kiwoyu.user.dto.LoginRequest;
 import com.swyp.kiwoyu.user.dto.LoginResponse;
 import com.swyp.kiwoyu.user.dto.SignUpRequest;
@@ -41,7 +42,6 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
             // 사용자 인증
@@ -53,6 +53,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    @PostMapping("/check-unique/nickname")
+    public ResponseEntity<Boolean> checkUniqueNickname(@RequestBody CheckUniqueNicknameRequestDto dto) {
+        try {
+            // 사용자 인증
+            Boolean exists = userService.checkUniqueNickname(dto);
+            return ResponseEntity.ok(!exists);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+    }
+
 
     //로그아웃
     @PostMapping("/logout")

@@ -1,6 +1,7 @@
 package com.swyp.kiwoyu.user.service;
 import com.swyp.kiwoyu.jwt.JwtProvider;
 import com.swyp.kiwoyu.user.domain.User;
+import com.swyp.kiwoyu.user.dto.CheckUniqueNicknameRequestDto;
 import com.swyp.kiwoyu.user.dto.LoginRequest;
 import com.swyp.kiwoyu.user.dto.LoginResponse;
 import com.swyp.kiwoyu.user.dto.SignUpRequest;
@@ -107,5 +108,12 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Boolean checkUniqueNickname(CheckUniqueNicknameRequestDto dto){
+        Boolean res = true;
+        String nickname = dto.getNickName();
+        res = userRepository.existsByNickname(nickname);
+        return res;
     }
 }
