@@ -4,6 +4,7 @@ import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -38,7 +40,12 @@ public class UserService {
         User user = new User();
         user.setNickname(signUpRequest.getNickname());
         user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
+        //user.setPassword(signUpRequest.getPassword());
+        /* Encode password */
+        String encodedPw = passwordEncoder.encode(signUpRequest.getPassword());
+        System.out.println(signUpRequest.getPassword());
+        System.out.println(encodedPw);
+        user.setPassword(encodedPw);
 
         return userRepository.save(user);
     }
@@ -56,14 +63,22 @@ public class UserService {
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             // 비밀번호 검증
-            if (user.getPassword().equals(loginRequest.getPassword())) {
+            System.out.println(user.getPassword());
+            System.out.println(loginRequest.getPassword());
+            if (
+                loginRequest.getPassword().contentEquals(user.getPassword())
+                || passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())
+                //TODO: remove raw comparison
+            ) {
                 // 비밀번호가 일치할시 해당 사용자 반환
+
                 return user;
             }
         }
         // 인증 실패
         throw new IllegalArgumentException("Invalid credentials");
     }
+
 
     public void setTempPassword(String email, String tempPassword) {
         // 이메일을 기반으로 사용자를 찾아서 임시 비밀번호를 설정합니다.
@@ -99,7 +114,7 @@ public class UserService {
 
         String token = JwtProvider.getInstance().createToken(user.getEmail());
         System.out.println("login success token: "+token);
-        return new LoginResponse(user.getId(),user.getEmail(),user.getNickname(),token, user.getCreatedAt());
+        return new LoginResponse(user,token);
     }
     // 마이페이지 정보 수정
 

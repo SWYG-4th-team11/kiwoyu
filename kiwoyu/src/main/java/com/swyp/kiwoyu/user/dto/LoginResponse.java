@@ -1,5 +1,6 @@
 package com.swyp.kiwoyu.user.dto;
 
+import com.swyp.kiwoyu.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,12 @@ public class LoginResponse {
         this.nickname = nickname;
         this.token = token;
         this.createdDateTime = createdDateTime;
+    }
+    public LoginResponse(User user, String token) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.nickname = user.getNickname();
+        this.token = token;
+        this.createdDateTime = user.getCreatedAt();
     }
 }

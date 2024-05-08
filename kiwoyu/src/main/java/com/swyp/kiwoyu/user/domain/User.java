@@ -28,6 +28,4 @@ public class User extends BaseEntity {
 
     private Boolean isDeleted;
 
-    private Date createdAt;
-
 }
