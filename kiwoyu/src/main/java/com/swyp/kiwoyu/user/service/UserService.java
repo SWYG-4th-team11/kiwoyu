@@ -40,11 +40,9 @@ public class UserService {
         User user = new User();
         user.setNickname(signUpRequest.getNickname());
         user.setEmail(signUpRequest.getEmail());
-        //user.setPassword(signUpRequest.getPassword());
+
         /* Encode password */
         String encodedPw = passwordEncoder.encode(signUpRequest.getPassword());
-        System.out.println(signUpRequest.getPassword());
-        System.out.println(encodedPw);
         user.setPassword(encodedPw);
 
         return userRepository.save(user);
