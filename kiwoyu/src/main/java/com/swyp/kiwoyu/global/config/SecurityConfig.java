@@ -43,8 +43,7 @@ public class SecurityConfig {
     private final CustomAuthenticationManager authManager= new CustomAuthenticationManager();
 
     private final List allowedOrigins = List.of(
-            "http://localhost:3000",
-            "*"
+            "http://localhost:3000"
     );
     private final List allowedPatterns = List.of(
             "http://*.swygbro.com",
