@@ -47,7 +47,8 @@ public class SecurityConfig {
     );
     private final List allowedPatterns = List.of(
             "http://*.swygbro.com",
-            "https://*.swygbro.com"
+            "https://*.swygbro.com",
+            "http://localhost:3000"
     );
 
     @Bean
