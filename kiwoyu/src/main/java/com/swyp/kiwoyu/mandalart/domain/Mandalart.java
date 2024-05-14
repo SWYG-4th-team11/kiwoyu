@@ -1,6 +1,7 @@
 package com.swyp.kiwoyu.mandalart.domain;
 
 import com.swyp.kiwoyu.global.common.BaseEntity;
+import com.swyp.kiwoyu.mandalart.dto.PostMandalartDto;
 import com.swyp.kiwoyu.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,7 +27,17 @@ public class Mandalart extends BaseEntity {
     @JoinColumn(name="user_id")
     private User user;
 
-    private Integer level;
-    private Integer exp;
+    private Integer level=1;
+    private Integer exp=0;
 
+    private Boolean levelUp=false;
+
+    public Mandalart(PostMandalartDto dto){
+        this.setTitle(dto.getTitle());
+        this.setCategory(dto.getCategories().toString().replace("[","").replace("]",""));
+    }
+
+    public Mandalart() {
+
+    }
 }

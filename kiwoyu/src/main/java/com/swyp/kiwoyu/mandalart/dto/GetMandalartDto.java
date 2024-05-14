@@ -33,6 +33,7 @@ public class GetMandalartDto {
 
     private Date due;
     private Integer dDay;
+    private Boolean levelUp;
 
     private GoalDto mainGoal;
     private List<GoalDto> subGoals;
@@ -40,10 +41,11 @@ public class GetMandalartDto {
     public GetMandalartDto(Mandalart mandalart){
         this.id = mandalart.getId();
         this.title = mandalart.getTitle();
-        this.categories = Arrays.asList(mandalart.getCategory().split(","));
+        this.categories = Arrays.asList(mandalart.getCategory().split(", "));
         this.userId = mandalart.getUser().getId();
         this.level = mandalart.getLevel();
         this.exp = mandalart.getExp();
+        this.levelUp = mandalart.getLevelUp();
     }
     public GetMandalartDto(Mandalart mandalart, GoalDto mainGoal) {
         this(mandalart);

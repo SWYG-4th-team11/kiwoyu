@@ -2,6 +2,7 @@ package com.swyp.kiwoyu.mandalart.controller;
 
 import com.swyp.kiwoyu.mandalart.domain.Mandalart;
 import com.swyp.kiwoyu.mandalart.dto.GetMandalartDto;
+import com.swyp.kiwoyu.mandalart.dto.PostMandalartDto;
 import com.swyp.kiwoyu.mandalart.dto.UpdateMandalartRequestDto;
 import com.swyp.kiwoyu.mandalart.service.MandalartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class MandalartController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Mandalart> createMandalart(@RequestBody Mandalart mandalart, Long userId) {
-        Mandalart createdMandalart = mandalartService.createOrUpdateMandalartWithUserId(mandalart, userId);
+    public ResponseEntity<Mandalart> createMandalart(@RequestBody PostMandalartDto dto) {
+        Mandalart createdMandalart = mandalartService.createOrUpdateMandalartWithUserId(dto);
         return new ResponseEntity<>(createdMandalart, HttpStatus.CREATED);
     }
 

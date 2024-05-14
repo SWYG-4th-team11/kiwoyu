@@ -3,6 +3,7 @@ package com.swyp.kiwoyu.goal.domain;
 import com.swyp.kiwoyu.global.common.BaseEntity;
 import com.swyp.kiwoyu.goal.dto.UpdateGoalRequestDto;
 import com.swyp.kiwoyu.mandalart.domain.Mandalart;
+import com.swyp.kiwoyu.mandalart.dto.PostMandalartDto;
 import com.swyp.kiwoyu.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -59,6 +60,15 @@ public class Goal extends BaseEntity {
         this.parentGoalId=goal.getParentGoalId();
         this.user=goal.getUser();
         this.mandalart=goal.getMandalart();
+    }
+
+    public Goal(PostMandalartDto dto, Mandalart m){
+        this.setType("main");
+        this.setTitle(dto.getTitle());
+        this.setContent("");
+        this.setGoalDate(dto.getDue());
+        this.setIsAchieved(false);
+        this.mandalart = m;
     }
 
     public Goal() {
