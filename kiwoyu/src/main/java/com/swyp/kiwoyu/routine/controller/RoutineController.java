@@ -3,13 +3,10 @@ package com.swyp.kiwoyu.routine.controller;
 import com.swyp.kiwoyu.routine.domain.*;
 import com.swyp.kiwoyu.routine.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,12 +41,9 @@ public class RoutineController {
     public ResponseEntity<PostRoutineByIdAndDateResponseDto> postRoutineByIdAndDate(
             @RequestBody PostRoutineByIdAndDateRequestDto dto
     ) {
-//        System.out.println("postRoutineByIdAndDate--start");
         List<RoutineDto> routine = routineService.getRoutinesByUserMandalartAndDate(dto.getUserId(),dto.getMandalartId(), dto.getRoutineDate());
         PostRoutineByIdAndDateResponseDto responseDto = new PostRoutineByIdAndDateResponseDto();
         responseDto.setRoutines(routine);
-//        System.out.println(routine);
-//        System.out.println("postRoutineByIdAndDate--end");
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -61,13 +55,33 @@ public class RoutineController {
         return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Routine> updateRoutine(@PathVariable("id") Long id, @RequestBody Routine routine) {
-        Optional<Routine> existingRoutine = routineService.getRoutineById(id);
-        if (existingRoutine.isPresent()) {
-            routine.setId(id);
+    @PutMapping("/toggle-is-checked")
+    public ResponseEntity<PutToggleIsCheckedRoutineByIdDto> putCheck(
+            @RequestBody PutToggleIsCheckedRoutineByIdDto dto
+    ) {
+        Routine routine = routineService.getRoutineById(dto.getRoutineId()).orElse(null);
+        if (routine != null) {
+            routine.setIsChecked(!routine.getIsChecked());
             Routine updatedRoutine = routineService.createOrUpdateRoutine(routine);
-            return new ResponseEntity<>(updatedRoutine, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    new PutToggleIsCheckedRoutineByIdDto(updatedRoutine),
+                    HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+    @PutMapping("/update")
+    public ResponseEntity<RoutineDto> updateRoutine(@RequestBody RoutineDto dto) {
+        Optional<Routine> existingRoutine = routineService.getRoutineById(dto.getId());
+        if (existingRoutine.isPresent()) {
+            Routine updateOne = existingRoutine.get();
+            updateOne.setRoutine_date(dto.getRoutineDate());
+            updateOne.setMemo(dto.getMemo());
+            updateOne.setTitle(dto.getTitle());
+            updateOne.setIsChecked(dto.getIsChecked());
+            Routine updatedRoutine = routineService.createOrUpdateRoutine(updateOne);
+            return new ResponseEntity<>(new RoutineDto(updatedRoutine), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
