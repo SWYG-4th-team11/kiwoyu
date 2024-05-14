@@ -32,4 +32,5 @@ public class MandalartRepositoryImpl implements MandalartRepositoryCustom {
 
         return mr.save(mandalart);
     }
+
 }
