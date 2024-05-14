@@ -19,43 +19,18 @@ public class MandalartController {
     @Autowired
     private MandalartService mandalartService;
 
-    @GetMapping
-    public ResponseEntity<List<Mandalart>> getAllMandalarts() {
-        List<Mandalart> mandalarts = mandalartService.getAllMandalarts();
-        return new ResponseEntity<>(mandalarts, HttpStatus.OK);
-    }
-
     @GetMapping("/userId/{userId}")
     public ResponseEntity<List<GetMandalartDto>> getMandalartWholeInfoByUserId(@PathVariable("userId") Long userId) {
         List<GetMandalartDto> mandalarts = mandalartService.getMandalartWholeInfo(userId);
+        mandalartService.initializeLevelup(mandalarts);
         return new ResponseEntity<>(mandalarts, HttpStatus.OK);
     }
-
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Mandalart> getMandalartById(@PathVariable("id") Long id) {
-//        Optional<Mandalart> mandalart = mandalartService.getMandalartById(id);
-//        return mandalart.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
 
     @PostMapping
     public ResponseEntity<Mandalart> createMandalart(@RequestBody PostMandalartDto dto) {
         Mandalart createdMandalart = mandalartService.createOrUpdateMandalartWithUserId(dto);
         return new ResponseEntity<>(createdMandalart, HttpStatus.CREATED);
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Mandalart> updateMandalart(@PathVariable("id") Long id, @RequestBody Mandalart mandalart) {
-//        Optional<Mandalart> existingMandalart = mandalartService.getMandalartById(id);
-//        if (existingMandalart.isPresent()) {
-//            mandalart.setId(id);
-//            Mandalart updatedMandalart = mandalartService.createOrUpdateMandalart(mandalart);
-//            return new ResponseEntity<>(updatedMandalart, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     @PutMapping("/category")
     public ResponseEntity<UpdateMandalartRequestDto> updateMandalartCategory(@RequestBody UpdateMandalartRequestDto dto ) {

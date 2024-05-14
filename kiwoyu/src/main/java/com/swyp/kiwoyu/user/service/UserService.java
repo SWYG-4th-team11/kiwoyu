@@ -1,5 +1,7 @@
 package com.swyp.kiwoyu.user.service;
 import com.swyp.kiwoyu.jwt.JwtProvider;
+import com.swyp.kiwoyu.mandalart.domain.Mandalart;
+import com.swyp.kiwoyu.mandalart.repository.MandalartRepository;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.repository.UserRepository;
@@ -14,6 +16,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MandalartRepository mandalartRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -147,5 +151,21 @@ public class UserService {
         }else {
             throw new IllegalArgumentException("User not found");
         }
+    }
+
+    public MyPageInfoDto getMyPageInfo(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null){
+            return new MyPageInfoDto();
+        }
+        List<Mandalart> ms= mandalartRepository.findByUserId(id);
+        MyPageInfoDto res = new MyPageInfoDto(user);
+
+        if (ms.size()< 1){
+            return new MyPageInfoDto();
+        } else {
+            return new MyPageInfoDto(user, ms.get(0));
+        }
+
     }
 }

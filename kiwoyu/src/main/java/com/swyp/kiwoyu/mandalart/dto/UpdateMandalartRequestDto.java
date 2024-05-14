@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,10 +16,10 @@ import java.util.Date;
 public class UpdateMandalartRequestDto {
     // 중목표 수정 모달용
     private Long id;
-    private String category;
+    private List<String> category;
     public UpdateMandalartRequestDto(Mandalart mandalart){
         this.id = mandalart.getId();
-        this.category = mandalart.getCategory();
+        this.category = Arrays.asList(mandalart.getCategory().split(", "));
     }
 }
 

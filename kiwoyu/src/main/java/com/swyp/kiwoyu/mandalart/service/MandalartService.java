@@ -57,8 +57,7 @@ public class MandalartService {
         Optional<Mandalart> existingMandalart = getMandalartById(dto.getId());
         if (existingMandalart.isPresent()) {
             Mandalart m = existingMandalart.get();
-            m.setCategory(dto.getCategory());
-
+            m.setCategory(dto.getCategory().toString().replace("[","").replace("]",""));
             return new UpdateMandalartRequestDto(mandalartRepository.save(m));
         } else {
             return null;
@@ -101,9 +100,26 @@ public class MandalartService {
                 }
             }
             dto.setSubGoals(middleGoals);
+            if(dto.getLevelUp() == true)
             res.add(dto);
+
         }
+        /* LevelUp Only Once */
 
         return res;
+    }
+
+    public void initializeLevelup(List<GetMandalartDto> mandalarts) {
+
+        for( GetMandalartDto dto: mandalarts){
+            if (true == dto.getLevelUp()){
+                Mandalart m = mandalartRepository.findById(dto.getId()).orElse(null);
+                if(m!=null){
+                    m.setLevelUp(false);
+                    mandalartRepository.save(m);
+                }
+            }
+        }
+
     }
 }
