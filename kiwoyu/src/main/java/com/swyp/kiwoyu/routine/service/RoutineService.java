@@ -42,8 +42,6 @@ public class RoutineService {
         return routineRepository.upsertRoutineWithUserAndMandalart(newRoutine,dto.getUserId(), dto.getMandalartId());
     }
     public List<RoutineDto> getRoutinesByUserMandalartAndDate(Long userId, Long mandalartId, Date routineDate){
-//        System.out.println("getRoutinesByUserMandalartAndDate--start");
-
         List<Routine> routines =  routineRepository.findByUserMandalartAndDate(userId, mandalartId, routineDate);
         List<RoutineDto> res;
         res = routines.stream().map(
@@ -52,7 +50,6 @@ public class RoutineService {
         }).collect(Collectors.toList());
         return res;
     }
-
 
     public void deleteRoutine(Long id) {
         routineRepository.deleteById(id);
