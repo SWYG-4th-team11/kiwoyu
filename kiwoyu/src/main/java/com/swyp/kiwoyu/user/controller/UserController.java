@@ -1,11 +1,14 @@
 package com.swyp.kiwoyu.user.controller;
 
+import com.swyp.kiwoyu.goal.dto.UpdateGoalResponseDto;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.service.UserService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -105,18 +110,18 @@ public class UserController {
         }
     }
 
-//    @GetMapping("/info/{email}")
-//    public ResponseEntity<User> getUserInfoByEmail(@PathVariable String email) {
-//        // 이메일을 기반으로 사용자 정보를 가져옴
-//        Optional<User> userOptional = userService.getUserByEmail(email);
-//
-//        if (userOptional.isPresent()) {
-//            return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
-//        } else {
-//            // 해당 이메일을 가진 사용자를 찾을 수 없는 경우
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    //비밀번호 변경
+    @PostMapping("/update-password")
+    public ResponseEntity<User> updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto){
+        try {
+            String encryptedNewPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
+            updatePasswordRequestDto.setNewPassword(encryptedNewPassword);
 
+            User updatedUser = userService.updatePassword(updatePasswordRequestDto);
 
+            return ResponseEntity.ok(updatedUser);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
 }
