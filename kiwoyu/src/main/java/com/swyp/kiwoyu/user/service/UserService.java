@@ -48,10 +48,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User createOrUpdateUser(User user){
-        return userRepository.save(user);
-    }
-
 
     //로그인
     public User authenticate(LoginRequest loginRequest) {
@@ -132,5 +128,24 @@ public class UserService {
         userRepository.save(user);
         user = userRepository.findById(dto.getUserId()).orElse(null);
         return user;
+    }
+
+    //비밀번호 변경
+    public User updatePassword(UpdatePasswordRequestDto updatePasswordRequestDto){
+        Optional<User> existingUserOptional = userRepository.findById(updatePasswordRequestDto.getId());
+
+        if ((existingUserOptional.isPresent())) {
+            User existingUser = existingUserOptional.get();
+
+            if (existingUser.getPassword().equals(updatePasswordRequestDto.getPassword())) {
+                String encryptedPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
+                existingUser.setPassword(encryptedPassword);
+                return userRepository.save(existingUser);
+            } else {
+                throw new IllegalArgumentException("Password doesn't match");
+            }
+        }else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 }
