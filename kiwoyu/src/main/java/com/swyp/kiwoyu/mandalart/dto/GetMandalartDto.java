@@ -50,7 +50,7 @@ public class GetMandalartDto {
 
         this.mainGoal = mainGoal;
         this.subGoals = mainGoal.getSubGoals();
-
+        this.title= mainGoal.getTitle();
         this.due = mainGoal.getGoalDate();
         this.dDay = DateProcess.calculateDday(mainGoal.getGoalDate());
     }
