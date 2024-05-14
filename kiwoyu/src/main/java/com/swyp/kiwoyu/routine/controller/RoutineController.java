@@ -1,5 +1,8 @@
 package com.swyp.kiwoyu.routine.controller;
 
+import com.swyp.kiwoyu.global.util.ExpProcess;
+import com.swyp.kiwoyu.global.util.dto.ExpLevelDto;
+import com.swyp.kiwoyu.mandalart.domain.Mandalart;
 import com.swyp.kiwoyu.routine.domain.*;
 import com.swyp.kiwoyu.routine.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,18 +62,15 @@ public class RoutineController {
     public ResponseEntity<PutToggleIsCheckedRoutineByIdDto> putCheck(
             @RequestBody PutToggleIsCheckedRoutineByIdDto dto
     ) {
-        Routine routine = routineService.getRoutineById(dto.getRoutineId()).orElse(null);
-        if (routine != null) {
-            routine.setIsChecked(!routine.getIsChecked());
-            Routine updatedRoutine = routineService.createOrUpdateRoutine(routine);
-            return new ResponseEntity<>(
-                    new PutToggleIsCheckedRoutineByIdDto(updatedRoutine),
-                    HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Routine routine = routineService.getRoutineById(dto.getRoutineId()).orElseThrow();
+        Routine updatedRoutine = routineService.toggleIsChecked(routine);
 
+        return new ResponseEntity<>(
+            new PutToggleIsCheckedRoutineByIdDto(updatedRoutine),
+                HttpStatus.OK);
     }
+
+
     @PutMapping("/update")
     public ResponseEntity<RoutineDto> updateRoutine(@RequestBody RoutineDto dto) {
         Optional<Routine> existingRoutine = routineService.getRoutineById(dto.getId());

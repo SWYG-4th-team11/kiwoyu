@@ -39,6 +39,8 @@ public class Goal extends BaseEntity {
 
     private Boolean isAchieved;
 
+    private Boolean isAppliedToExp=false;
+
     // Foreign key
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")

@@ -25,6 +25,7 @@ public class Routine extends BaseEntity {
     private String memo;
 
     private Boolean isChecked;
+    private Boolean isAppliedToExp=false;
 
     @Temporal(TemporalType.DATE)
     private Date routine_date;
