@@ -100,7 +100,6 @@ public class MandalartService {
                 }
             }
             dto.setSubGoals(middleGoals);
-            if(dto.getLevelUp() == true)
             res.add(dto);
 
         }

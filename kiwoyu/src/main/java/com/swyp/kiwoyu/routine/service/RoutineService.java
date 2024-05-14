@@ -1,5 +1,9 @@
 package com.swyp.kiwoyu.routine.service;
 
+import com.swyp.kiwoyu.global.util.ExpProcess;
+import com.swyp.kiwoyu.global.util.dto.ExpLevelDto;
+import com.swyp.kiwoyu.mandalart.domain.Mandalart;
+import com.swyp.kiwoyu.mandalart.repository.MandalartRepository;
 import com.swyp.kiwoyu.routine.domain.PostCreateRoutineRequestDto;
 import com.swyp.kiwoyu.routine.domain.Routine;
 import com.swyp.kiwoyu.routine.domain.RoutineDto;
@@ -19,6 +23,8 @@ public class RoutineService {
 
     @Autowired
     private RoutineRepository routineRepository;
+    @Autowired
+    private MandalartRepository mandalartRepository;
     private RoutineRepositoryImpl routineRepositoryImpl;
 
     public List<Routine> getAllRoutines() {
@@ -31,6 +37,24 @@ public class RoutineService {
 
     public Routine createOrUpdateRoutine(Routine routine) {
         return routineRepository.save(routine);
+    }
+
+    public Routine toggleIsChecked(Routine routine) {
+        Boolean isChecked = routine.getIsChecked();
+        routine.setIsChecked(!isChecked);
+        if (isChecked == false && routine.getIsAppliedToExp() ==false) {
+            Mandalart m = routine.getMandalart();
+            ExpLevelDto expLevelDto = ExpProcess.updateExp(m,"routine");
+
+            m.setExp(expLevelDto.getExp());
+            m.setLevel(expLevelDto.getLevel());
+            m.setLevelUp(expLevelDto.getLevelUp());
+            mandalartRepository.save(m);
+
+            routine.setIsAppliedToExp(true);
+        }
+        routineRepository.save(routine);
+        return createOrUpdateRoutine(routine);
     }
 
     public Routine upsertRoutineWithUserAndMandalart(PostCreateRoutineRequestDto dto) {
