@@ -1,5 +1,6 @@
 package com.swyp.kiwoyu.user.controller;
 
+import com.swyp.kiwoyu.global.common.ResponseDto;
 import com.swyp.kiwoyu.goal.dto.UpdateGoalResponseDto;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
@@ -67,13 +68,14 @@ public class UserController {
 
     // 닉네임 중복체크
     @PostMapping("/nickname/check-unique")
-    public ResponseEntity<Boolean> checkUniqueNickname(@RequestBody CheckUniqueNicknameRequestDto dto) {
+    public ResponseEntity<CheckNicknameDto> checkUniqueNickname(@RequestBody CheckUniqueNicknameRequestDto dto) {
         try {
             // 사용자 인증
             Boolean exists = userService.checkUniqueNickname(dto);
-            return ResponseEntity.ok(!exists);
+            return ResponseEntity.ok(new CheckNicknameDto("ok",!exists,""));
+
         } catch (IllegalArgumentException e) {
-            throw e;
+            return ResponseEntity.ok(new CheckNicknameDto("fail",null, "중복체크 실패"));
         }
     }
 
