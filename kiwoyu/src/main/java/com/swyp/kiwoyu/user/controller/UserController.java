@@ -51,15 +51,17 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequest loginRequest) {
         try {
             // 사용자 인증
             User authenticatedUser = userService.authenticate(loginRequest);
             LoginResponse lr = userService.generateLoginResponse(authenticatedUser);
-            return ResponseEntity.ok(lr);
+            return ResponseEntity.ok(new LoginResponseDto("ok",lr, ""));
         } catch (IllegalArgumentException e) {
             // 인증 실패
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.ok(new LoginResponseDto("fail",null, "로그인 실패"));
+
         }
     }
 

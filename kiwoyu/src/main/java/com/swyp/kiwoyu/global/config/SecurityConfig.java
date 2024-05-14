@@ -96,7 +96,7 @@ public class SecurityConfig {
         // token 설정
 
         // 에러 핸들링
-        http.exceptionHandling(it->{ it.authenticationEntryPoint(entrypoint);});
+//        http.exceptionHandling(it->{ it.authenticationEntryPoint(entrypoint);});
 
         return http.build();
     }
