@@ -2,8 +2,10 @@ package com.swyp.kiwoyu.mandalart.service;
 import com.swyp.kiwoyu.goal.domain.Goal;
 import com.swyp.kiwoyu.goal.dto.GoalDto;
 import com.swyp.kiwoyu.goal.dto.UpdateGoalResponseDto;
+import com.swyp.kiwoyu.goal.repository.GoalRepository;
 import com.swyp.kiwoyu.mandalart.domain.Mandalart;
 import com.swyp.kiwoyu.mandalart.dto.GetMandalartDto;
+import com.swyp.kiwoyu.mandalart.dto.PostMandalartDto;
 import com.swyp.kiwoyu.mandalart.dto.UpdateMandalartRequestDto;
 import com.swyp.kiwoyu.mandalart.repository.MandalartRepository;
 import com.swyp.kiwoyu.mandalart.repository.MandalartRepositoryImpl;
@@ -17,6 +19,9 @@ public class MandalartService {
 
     @Autowired
     private MandalartRepository mandalartRepository;
+
+    @Autowired
+    private GoalRepository goalRepository;
     private MandalartRepositoryImpl mandalartRepositoryImpl;
 
     public List<Mandalart> getAllMandalarts() {
@@ -33,6 +38,16 @@ public class MandalartService {
 
     public Mandalart createOrUpdateMandalartWithUserId(Mandalart mandalart, Long userId) {
         return mandalartRepository.createOrUpdateMandalartWithUserId(mandalart,userId);
+    }
+    public Mandalart createOrUpdateMandalartWithUserId(PostMandalartDto dto) {
+        Mandalart m = new Mandalart(dto);
+        Long userId = dto.getUserId();
+
+        Mandalart res = mandalartRepository.createOrUpdateMandalartWithUserId(m,userId);
+
+        Goal g = new Goal(dto,res);
+        goalRepository.createOrUpdateGoalWithUserId(g,userId);
+        return res;
     }
     public void deleteMandalart(Long id) {
         mandalartRepository.deleteById(id);
