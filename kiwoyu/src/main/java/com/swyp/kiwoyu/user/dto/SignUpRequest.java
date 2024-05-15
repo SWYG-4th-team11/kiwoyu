@@ -22,4 +22,10 @@ public class SignUpRequest {
         this.email = email;
         this.password = password;
     }
+
+    public SignUpRequest(User user) {
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
+        this.password = null;
+    }
 }

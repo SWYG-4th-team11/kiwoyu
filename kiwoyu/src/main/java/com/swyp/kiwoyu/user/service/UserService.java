@@ -34,22 +34,32 @@ public class UserService {
     public Optional<User> getUserByEmail(String email) { return userRepository.findByEmail(email);}
 
     // 회원가입
-    public User signUp(SignUpRequest signUpRequest) {
+    public SignUpResponseDto signUp(SignUpRequest signUpRequest) {
+        try{
+            // 닉네임 중복 체크
+            if (userRepository.existsByNickname(signUpRequest.getNickname())) {
+                throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+            }
 
-        // 닉네임 중복 체크
-        if (userRepository.existsByNickname(signUpRequest.getNickname())) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+            // 이메일 중복 체크
+            if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+                throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            }
+
+            User user = new User();
+            user.setNickname(signUpRequest.getNickname());
+            user.setEmail(signUpRequest.getEmail());
+
+            /* Encode password */
+            String encodedPw = passwordEncoder.encode(signUpRequest.getPassword());
+            user.setPassword(encodedPw);
+
+            User createdUser = userRepository.save(user);
+            return new SignUpResponseDto("ok",new SignUpRequest(createdUser),"");
+        } catch(Exception e){
+            System.out.println(e);
+            return new SignUpResponseDto("fail",null,e.getMessage());
         }
-
-        User user = new User();
-        user.setNickname(signUpRequest.getNickname());
-        user.setEmail(signUpRequest.getEmail());
-
-        /* Encode password */
-        String encodedPw = passwordEncoder.encode(signUpRequest.getPassword());
-        user.setPassword(encodedPw);
-
-        return userRepository.save(user);
     }
 
 
