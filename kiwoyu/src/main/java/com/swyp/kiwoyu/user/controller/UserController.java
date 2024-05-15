@@ -45,9 +45,9 @@ public class UserController {
 
     //회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
-        User createdUser = userService.signUp(signUpRequest);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequest signUpRequest) {
+        SignUpResponseDto dto = userService.signUp(signUpRequest);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     //로그인
