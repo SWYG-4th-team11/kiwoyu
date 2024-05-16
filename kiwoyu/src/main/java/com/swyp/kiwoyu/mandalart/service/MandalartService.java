@@ -16,7 +16,7 @@ import java.util.*;
 
 @Service
 public class MandalartService {
-
+    private final int _GOAL_COUNT = 4;
     @Autowired
     private MandalartRepository mandalartRepository;
 
@@ -45,9 +45,28 @@ public class MandalartService {
         Mandalart res = mandalartRepository.createOrUpdateMandalartWithUserId(m,userId);
 
         Goal g = new Goal(dto,res);
-        goalRepository.createOrUpdateGoalWithUserId(g,userId);
+        Goal createdMainGoal = goalRepository.createOrUpdateGoalWithUserId(g,userId);
+
         /* init. subGoals */
+        List<GoalDto> childMiddleGoals = new ArrayList<>();
+
+        for(int i = 0 ; i < _GOAL_COUNT; ++i){
+            Goal middleGoal = new Goal(dto,g.getId(),res,"middle");
+            Goal createdMiddleGoal = goalRepository.save(middleGoal);
+            childMiddleGoals.add(new GoalDto(createdMiddleGoal));
+
+            List<GoalDto> childSmallGoals = new ArrayList<>();
+            for(int j = 0 ; j < _GOAL_COUNT; ++j) {
+                Goal smallGoal = new Goal(dto,createdMiddleGoal.getId(),res,"small");
+                Goal createdSmallGoal = goalRepository.save(smallGoal);
+                childSmallGoals.add(new GoalDto(createdSmallGoal));
+            }
+            childMiddleGoals.get(childMiddleGoals.size()-1).setSubGoals(childSmallGoals);
+        }
+
         GetMandalartDto responseDto = new GetMandalartDto(res,new GoalDto(g));
+        responseDto.setMainGoal(new GoalDto(createdMainGoal));
+        responseDto.setSubGoals(childMiddleGoals);
         return responseDto;
     }
     public void deleteMandalart(Long id) {
