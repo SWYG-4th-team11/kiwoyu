@@ -39,15 +39,16 @@ public class MandalartService {
     public Mandalart createOrUpdateMandalartWithUserId(Mandalart mandalart, Long userId) {
         return mandalartRepository.createOrUpdateMandalartWithUserId(mandalart,userId);
     }
-    public Mandalart createOrUpdateMandalartWithUserId(PostMandalartDto dto) {
+    public GetMandalartDto createOrUpdateMandalartWithUserId(PostMandalartDto dto) {
         Mandalart m = new Mandalart(dto);
         Long userId = dto.getUserId();
-
         Mandalart res = mandalartRepository.createOrUpdateMandalartWithUserId(m,userId);
 
         Goal g = new Goal(dto,res);
         goalRepository.createOrUpdateGoalWithUserId(g,userId);
-        return res;
+        /* init. subGoals */
+        GetMandalartDto responseDto = new GetMandalartDto(res,new GoalDto(g));
+        return responseDto;
     }
     public void deleteMandalart(Long id) {
         mandalartRepository.deleteById(id);
