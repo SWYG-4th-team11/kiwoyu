@@ -19,6 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/user/nickname/check-unique")
                 .excludePathPatterns("/api/send-mail/password")
                 .excludePathPatterns("/api/send-mail/auth")
+                .excludePathPatterns("/api/send-mail/verify")
                 .excludePathPatterns("/swagget-ui/*")
                 .excludePathPatterns("/v3/*");
 
