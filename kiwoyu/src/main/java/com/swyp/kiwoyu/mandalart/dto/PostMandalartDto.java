@@ -29,5 +29,10 @@ public class PostMandalartDto {
     private Date due;
 
 //    private GoalDto mainGoal;
+    public PostMandalartDto(Mandalart m){
+        this.title = m.getTitle();
+        this.categories = Arrays.asList(m.getCategory().split(", "));
+        this.userId = m.getUser().getId();
+    }
 }
 
