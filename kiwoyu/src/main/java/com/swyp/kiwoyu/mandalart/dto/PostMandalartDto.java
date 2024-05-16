@@ -23,6 +23,7 @@ public class PostMandalartDto {
 
 
     private String title; // same as main goal content
+    private String memo;
     private List<String> categories; //
     private Long userId;
     private Date due;

@@ -67,7 +67,7 @@ public class Goal extends BaseEntity {
     public Goal(PostMandalartDto dto, Mandalart m){
         this.setType("main");
         this.setTitle(dto.getTitle());
-        this.setContent("");
+        this.setContent(dto.getMemo());
         this.setGoalDate(dto.getDue());
         this.setIsAchieved(false);
         this.mandalart = m;
