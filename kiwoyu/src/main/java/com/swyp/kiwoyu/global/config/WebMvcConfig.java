@@ -16,6 +16,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/user/login")
                 .excludePathPatterns("/api/user/signup")
                 .excludePathPatterns("/api/user/logout")
+                .excludePathPatterns("/api/user/nickname/check-unique")
+                .excludePathPatterns("/api/send-mail/password")
+                .excludePathPatterns("/api/send-mail/auth")
                 .excludePathPatterns("/swagget-ui/*")
                 .excludePathPatterns("/v3/*");
 
