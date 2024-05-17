@@ -73,6 +73,13 @@ public class MandalartService {
     public void deleteMandalart(Long id) {
         mandalartRepository.deleteById(id);
     }
+    public void deleteMandalart(Mandalart mandalart) {
+        List<Goal> goals = goalRepository.findAllByMandalart(mandalart);
+//        System.out.println(goals);
+
+        goalRepository.deleteAllById(goals.stream().map(it->it.getId()).toList());
+        deleteMandalart(mandalart.getId());
+    }
 
     public UpdateMandalartRequestDto updateMandalartCategory(UpdateMandalartRequestDto dto){
         Optional<Mandalart> existingMandalart = getMandalartById(dto.getId());
