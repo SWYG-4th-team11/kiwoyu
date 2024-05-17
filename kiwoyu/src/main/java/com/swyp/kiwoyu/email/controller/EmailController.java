@@ -5,6 +5,7 @@ import com.swyp.kiwoyu.email.dto.EmailDto;
 import com.swyp.kiwoyu.email.service.EmailService;
 import com.swyp.kiwoyu.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EmailController {
 
+    @Autowired
     private final EmailService emailService;
+
     private final RedisUtil redisUtil;
 
 
@@ -45,7 +48,10 @@ public class EmailController {
         String code = emailService.sendMail(emailMessage, "email");
 
         EmailDto emailDto1 = new EmailDto();
+        emailDto1.setEmail(emailDto.getEmail());
         emailDto1.setCode(code);
+
+        redisUtil.setDataExpire(emailDto1.getEmail(), emailDto1.getCode(), 3);
 
         return ResponseEntity.ok(emailDto1);
 
