@@ -48,25 +48,26 @@ public class MandalartService {
         Goal createdMainGoal = goalRepository.createOrUpdateGoalWithUserId(g,userId);
 
         /* init. subGoals */
-        List<GoalDto> childMiddleGoals = new ArrayList<>();
+        List<GoalDto> childGoals = new ArrayList<>();
 
         for(int i = 0 ; i < _GOAL_COUNT; ++i){
             Goal middleGoal = new Goal(dto,g.getId(),res,"middle");
             Goal createdMiddleGoal = goalRepository.save(middleGoal);
-            childMiddleGoals.add(new GoalDto(createdMiddleGoal));
+//            childMiddleGoals.add(new GoalDto(createdMiddleGoal));
+            childGoals.add(new GoalDto(createdMiddleGoal));
 
-            List<GoalDto> childSmallGoals = new ArrayList<>();
-            for(int j = 0 ; j < _GOAL_COUNT; ++j) {
+//            List<GoalDto> childSmallGoals = new ArrayList<>();
+            for(int j = 0 ; j < _GOAL_COUNT+1; ++j) {
                 Goal smallGoal = new Goal(dto,createdMiddleGoal.getId(),res,"small");
                 Goal createdSmallGoal = goalRepository.save(smallGoal);
-                childSmallGoals.add(new GoalDto(createdSmallGoal));
+                childGoals.add(new GoalDto(createdSmallGoal));
             }
-            childMiddleGoals.get(childMiddleGoals.size()-1).setSubGoals(childSmallGoals);
+//            childMiddleGoals.get(childMiddleGoals.size()-1).setSubGoals(childSmallGoals);
         }
 
         GetMandalartDto responseDto = new GetMandalartDto(res,new GoalDto(g));
         responseDto.setMainGoal(new GoalDto(createdMainGoal));
-        responseDto.setSubGoals(childMiddleGoals);
+        responseDto.setSubGoals(childGoals);
         return responseDto;
     }
     public void deleteMandalart(Long id) {
@@ -93,33 +94,18 @@ public class MandalartService {
             GetMandalartDto dto= new GetMandalartDto(m);
             List<Goal> goals = mandalartRepository.findMandalartGoalById(m.getId());
             System.out.println(goals);
-            List<GoalDto> middleGoals=new ArrayList<>();
-            Map<Long,Integer> id2Idx = new HashMap<>();
-            goals.stream().filter(it-> "middle".contentEquals(it.getType())).forEach(
-                    it -> {
-                        middleGoals.add(new GoalDto(it));
-                        id2Idx.put(it.getId(),middleGoals.size()-1);
-                    }
-            );
-            System.out.println(middleGoals);
-            System.out.println(id2Idx);
+
+            List<GoalDto> subGoals=new ArrayList<>();
+
             for(Goal g : goals){
-                if("middle".contentEquals(g.getType())){
-                    System.out.println(g.getId()+","+g.getType());
-                } else if("main".contentEquals(g.getType())){
+                if("main".contentEquals(g.getType())){
                     System.out.println(g.getId()+","+g.getType());
                     dto = new GetMandalartDto(m,new GoalDto(g));
-//                    dto.setMainGoal(new GoalDto(g));
                 } else{
-                    System.out.println(g.getId()+","+g.getType()+","+g.getParentGoalId());
-                    // Arrange Small Goals
-                    GoalDto parentMiddleGoal = middleGoals.get(id2Idx.get(g.getParentGoalId()));
-                    List<GoalDto> subGoals = parentMiddleGoal.getSubGoals();
                     subGoals.add(new GoalDto(g));
-                    parentMiddleGoal.setSubGoals(subGoals);
                 }
             }
-            dto.setSubGoals(middleGoals);
+            dto.setSubGoals(subGoals);
             res.add(dto);
 
         }
