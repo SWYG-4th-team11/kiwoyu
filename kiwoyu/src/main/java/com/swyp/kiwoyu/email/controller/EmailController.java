@@ -5,6 +5,8 @@ import com.swyp.kiwoyu.email.dto.EmailDto;
 import com.swyp.kiwoyu.email.dto.EmailRequestDto;
 import com.swyp.kiwoyu.email.service.EmailService;
 import com.swyp.kiwoyu.global.util.RedisUtil;
+import com.swyp.kiwoyu.user.domain.User;
+import com.swyp.kiwoyu.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,15 +29,24 @@ public class EmailController {
 
     // 임시 비밀번호 발급
     @PostMapping("/password")
-    public ResponseEntity sendPasswordMail(@RequestBody EmailRequestDto emailRequestDto) {
-        EmailMessage emailMessage = EmailMessage.builder()
-                .to(emailRequestDto.getEmail())
-                .subject("임시 비밀번호 발급")
-                .build();
+    public ResponseEntity<?> sendPasswordMail(@RequestBody EmailRequestDto emailRequestDto) {
+        if (emailRequestDto == null || emailRequestDto.getEmail() == null) {
+            return ResponseEntity.badRequest().body("Invalid email request");
+        }
+        try{
+            if (!emailService.doesUserExistByEmail(emailRequestDto.getEmail())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found with email : " + emailRequestDto.getEmail());
+            }
+            EmailMessage emailMessage = EmailMessage.builder()
+                    .to(emailRequestDto.getEmail())
+                    .subject("임시 비밀번호 발급")
+                    .build();
 
-        emailService.sendMail(emailMessage, "password");
-
-        return ResponseEntity.ok().build();
+            emailService.sendMail(emailMessage, "password");
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
     }
 
     // 회원가입 이메일 인증 - 요청 시 body로 인증번호 반환하도록 작성하였음

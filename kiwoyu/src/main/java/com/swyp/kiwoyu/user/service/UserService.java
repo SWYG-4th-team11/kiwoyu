@@ -4,6 +4,7 @@ import com.swyp.kiwoyu.mandalart.domain.Mandalart;
 import com.swyp.kiwoyu.mandalart.repository.MandalartRepository;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
+import com.swyp.kiwoyu.user.exception.UserNotFoundException;
 import com.swyp.kiwoyu.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,17 +90,13 @@ public class UserService {
 
 
     public void setTempPassword(String email, String tempPassword) {
-        // 이메일을 기반으로 사용자를 찾아서 임시 비밀번호를 설정합니다.
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
-            // 사용자가 존재하는 경우에만 임시 비밀번호를 설정합니다.
             User user = userOptional.get();
             user.setPassword(tempPassword);
-            // 사용자 업데이트
             userRepository.save(user);
         } else {
-            // 사용자를 찾을 수 없는 경우에는 예외 처리를 수행합니다.
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("User not found" + email);
         }
     }
 
@@ -177,5 +174,10 @@ public class UserService {
             return new MyPageInfoDto(user, ms.get(0));
         }
 
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 }
