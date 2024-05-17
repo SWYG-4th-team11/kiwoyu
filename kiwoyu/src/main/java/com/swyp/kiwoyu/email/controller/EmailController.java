@@ -2,6 +2,7 @@ package com.swyp.kiwoyu.email.controller;
 
 import com.swyp.kiwoyu.email.domain.EmailMessage;
 import com.swyp.kiwoyu.email.dto.EmailDto;
+import com.swyp.kiwoyu.email.dto.EmailRequestDto;
 import com.swyp.kiwoyu.email.service.EmailService;
 import com.swyp.kiwoyu.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,9 @@ public class EmailController {
 
     // 임시 비밀번호 발급
     @PostMapping("/password")
-    public ResponseEntity sendPasswordMail(@RequestBody EmailDto emailDto) {
+    public ResponseEntity sendPasswordMail(@RequestBody EmailRequestDto emailRequestDto) {
         EmailMessage emailMessage = EmailMessage.builder()
-                .to(emailDto.getEmail())
+                .to(emailRequestDto.getEmail())
                 .subject("임시 비밀번호 발급")
                 .build();
 
