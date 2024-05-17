@@ -24,6 +24,14 @@ public class MandalartService {
     private GoalRepository goalRepository;
     private MandalartRepositoryImpl mandalartRepositoryImpl;
 
+    private List<String> GoalTypeTemplate = List.of(
+            "small","small","small","small","small",
+            "small","middle","small","middle","small",
+            "small","small", "main","small","small",
+            "small","middle","small","middle","small",
+            "small","small","small","small","small"
+    );
+
     public List<Mandalart> getAllMandalarts() {
         return mandalartRepository.findAll();
     }
@@ -50,23 +58,33 @@ public class MandalartService {
         /* init. subGoals */
         List<GoalDto> childGoals = new ArrayList<>();
 
-        for(int i = 0 ; i < _GOAL_COUNT; ++i){
-            Goal middleGoal = new Goal(dto,g.getId(),res,"middle");
-            Goal createdMiddleGoal = goalRepository.save(middleGoal);
-//            childMiddleGoals.add(new GoalDto(createdMiddleGoal));
-            childGoals.add(new GoalDto(createdMiddleGoal));
-
-//            List<GoalDto> childSmallGoals = new ArrayList<>();
-            for(int j = 0 ; j < _GOAL_COUNT+1; ++j) {
-                Goal smallGoal = new Goal(dto,createdMiddleGoal.getId(),res,"small");
-                Goal createdSmallGoal = goalRepository.save(smallGoal);
-                childGoals.add(new GoalDto(createdSmallGoal));
+//        for(int i = 0 ; i < _GOAL_COUNT; ++i){
+//            Goal middleGoal = new Goal(dto,g.getId(),res,"middle");
+//            Goal createdMiddleGoal = goalRepository.save(middleGoal);
+////            childMiddleGoals.add(new GoalDto(createdMiddleGoal));
+//            childGoals.add(new GoalDto(createdMiddleGoal));
+//
+////            List<GoalDto> childSmallGoals = new ArrayList<>();
+//            for(int j = 0 ; j < _GOAL_COUNT+1; ++j) {
+//                Goal smallGoal = new Goal(dto,createdMiddleGoal.getId(),res,"small");
+//                Goal createdSmallGoal = goalRepository.save(smallGoal);
+//                childGoals.add(new GoalDto(createdSmallGoal));
+//            }
+////            childMiddleGoals.get(childMiddleGoals.size()-1).setSubGoals(childSmallGoals);
+//        }
+        GoalDto mainGoal = new GoalDto(createdMainGoal);
+        for(String type: GoalTypeTemplate){
+            if("main".contentEquals(type)){
+                childGoals.add(mainGoal);
+            } else {
+                Goal goal = new Goal(dto,g.getId(),res,type);
+                Goal createdGoal = goalRepository.save(goal);
+                childGoals.add(new GoalDto(createdGoal));
             }
-//            childMiddleGoals.get(childMiddleGoals.size()-1).setSubGoals(childSmallGoals);
         }
 
         GetMandalartDto responseDto = new GetMandalartDto(res,new GoalDto(g));
-        responseDto.setMainGoal(new GoalDto(createdMainGoal));
+        responseDto.setMainGoal(mainGoal);
         responseDto.setSubGoals(childGoals);
         return responseDto;
     }
@@ -97,7 +115,7 @@ public class MandalartService {
 
         List<Mandalart> ms = mandalartRepository.findByUserId(userId);
 
-        for( Mandalart m: ms){
+        for( Mandalart m: ms ){
             GetMandalartDto dto= new GetMandalartDto(m);
             List<Goal> goals = mandalartRepository.findMandalartGoalById(m.getId());
             System.out.println(goals);
@@ -112,6 +130,7 @@ public class MandalartService {
                     subGoals.add(new GoalDto(g));
                 }
             }
+            subGoals.add(12,dto.getMainGoal());
             dto.setSubGoals(subGoals);
             res.add(dto);
 
