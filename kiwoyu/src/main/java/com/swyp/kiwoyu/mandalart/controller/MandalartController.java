@@ -27,8 +27,8 @@ public class MandalartController {
     }
 
     @PostMapping
-    public ResponseEntity<Mandalart> createMandalart(@RequestBody PostMandalartDto dto) {
-        Mandalart createdMandalart = mandalartService.createOrUpdateMandalartWithUserId(dto);
+    public ResponseEntity<GetMandalartDto> createMandalart(@RequestBody PostMandalartDto dto) {
+        GetMandalartDto createdMandalart = mandalartService.createOrUpdateMandalartWithUserId(dto);
         return new ResponseEntity<>(createdMandalart, HttpStatus.CREATED);
     }
 

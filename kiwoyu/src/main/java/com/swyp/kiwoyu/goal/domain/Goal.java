@@ -64,16 +64,37 @@ public class Goal extends BaseEntity {
         this.mandalart=goal.getMandalart();
     }
 
+    public Goal() {
+
+    }
+
     public Goal(PostMandalartDto dto, Mandalart m){
+        // used for mandalart and main goal init.
         this.setType("main");
         this.setTitle(dto.getTitle());
         this.setContent(dto.getMemo());
         this.setGoalDate(dto.getDue());
         this.setIsAchieved(false);
+
         this.mandalart = m;
+        this.user = m.getUser();
+
     }
 
-    public Goal() {
+    public Goal(PostMandalartDto dto, Long parentGoalId, Mandalart m, String type){
+        // used for mandalart and middle/small goal init.
+        if("middle".contentEquals(type) || "small".contentEquals(type)){
 
+            this.setType(type);
+            this.setTitle("");
+            this.setContent("");
+            this.setGoalDate(dto.getDue());
+            this.setIsAchieved(false);
+
+            this.setParentGoalId(parentGoalId);
+
+            this.mandalart = m;
+            this.user = m.getUser();
+        }
     }
 }
