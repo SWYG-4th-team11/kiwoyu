@@ -47,7 +47,7 @@ public class MandalartController {
     public ResponseEntity<Void> deleteMandalart(@PathVariable("id") Long id) {
         Optional<Mandalart> mandalart = mandalartService.getMandalartById(id);
         if (mandalart.isPresent()) {
-            mandalartService.deleteMandalart(id);
+            mandalartService.deleteMandalart(mandalart.get());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
