@@ -1,6 +1,7 @@
 package com.swyp.kiwoyu.email.service;
 
 import com.swyp.kiwoyu.email.domain.EmailMessage;
+import com.swyp.kiwoyu.global.util.RedisUtil;
 import com.swyp.kiwoyu.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,12 @@ import java.util.Random;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+
     private final SpringTemplateEngine templateEngine;
 
     private final UserService userService;
+
+    private final RedisUtil redisUtil;
 
     // 이메일을 전송
     public String sendMail(EmailMessage emailMessage, String type) {
@@ -30,14 +34,16 @@ public class EmailService {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        if (type.equals("password"))
-            userService.setTempPassword(emailMessage.getTo(), authNum);
-
+        if (type.equals("password")) {
+            userService.setTempPassword(emailMessage.getTo(), authNum);}
+//        }else if (type.equals("email")) {
+//            redisUtil.setDataExpire(emailMessage.getTo(), authNum, 3);
+//        }
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(emailMessage.getTo()); // 메일 수신자
-            mimeMessageHelper.setSubject(emailMessage.getSubject()); // 메일 제목
-            mimeMessageHelper.setText(setContext(authNum, type), true); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setTo(emailMessage.getTo());
+            mimeMessageHelper.setSubject(emailMessage.getSubject());
+            mimeMessageHelper.setText(setContext(authNum, type), true);
             javaMailSender.send(mimeMessage);
 
             log.info("Send email successfully");
@@ -77,5 +83,15 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("code", code);
         return templateEngine.process(type, context);
+    }
+
+    // 인증코드 검증
+    public boolean verifyEmailCode(String email, String code) {
+        String savedCode = redisUtil.getData(email);
+        if (code.equals(savedCode)) {
+            redisUtil.deleteData(email);    //검증 후 인증코드 삭제
+            return true;
+        }
+        return false;
     }
 }
