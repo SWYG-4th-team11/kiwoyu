@@ -29,13 +29,6 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-//        Optional<User> user = userService.getUserById(id);
-//        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<MyPageInfoDto> getMyPageInfoById(@PathVariable("id") Long id) {
         MyPageInfoDto dto = userService.getMyPageInfo(id);

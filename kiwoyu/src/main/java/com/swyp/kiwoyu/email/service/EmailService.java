@@ -2,6 +2,7 @@ package com.swyp.kiwoyu.email.service;
 
 import com.swyp.kiwoyu.email.domain.EmailMessage;
 import com.swyp.kiwoyu.global.util.RedisUtil;
+import com.swyp.kiwoyu.user.exception.UserNotFoundException;
 import com.swyp.kiwoyu.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +30,20 @@ public class EmailService {
     private final RedisUtil redisUtil;
 
     // 이메일을 전송
-    public String sendMail(EmailMessage emailMessage, String type) {
+    public String sendMail(EmailMessage emailMessage, String type)  {
         String authNum = createCode();
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        if (type.equals("password")) {
-            userService.setTempPassword(emailMessage.getTo(), authNum);}
-//        }else if (type.equals("email")) {
-//            redisUtil.setDataExpire(emailMessage.getTo(), authNum, 3);
-//        }
         try {
+            if (type.equals("password")){
+                try {
+                    userService.setTempPassword(emailMessage.getTo(), authNum);
+                } catch (UserNotFoundException e) {
+                    log.error("User not found with email", emailMessage.getTo(), e);
+                    throw new UserNotFoundException("User not found with email " + emailMessage.getTo());
+                }
+            }
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(emailMessage.getTo());
             mimeMessageHelper.setSubject(emailMessage.getSubject());
@@ -50,9 +54,20 @@ public class EmailService {
 
             return authNum;
 
-        } catch (MessagingException e) {
-            log.info("Failed to send mail");
-            throw new RuntimeException(e);
+        }
+        catch (MessagingException e) {
+            log.error("Failed to send mail", e);
+            throw new RuntimeException("Failed to send mail", e);
+        }
+    }
+
+    // 사용자 이메일 존재 여부 확인 메서드
+    public boolean doesUserExistByEmail(String email) {
+        try {
+            userService.findByEmail(email);
+            return true;
+        } catch (UserNotFoundException e) {
+            return false;
         }
     }
 
