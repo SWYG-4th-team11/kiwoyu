@@ -28,8 +28,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation "org.springframework.boot:spring-boot-devtools"
 
-	// mail
+	// Mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
 	// Security
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
