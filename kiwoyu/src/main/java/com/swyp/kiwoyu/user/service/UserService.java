@@ -72,8 +72,6 @@ public class UserService {
         if(userOptional.isPresent()) {
             User user = userOptional.get();
 
-            System.out.println(user.getPassword());
-            System.out.println(loginRequest.getPassword());
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return user;
             }
@@ -161,7 +159,7 @@ public class UserService {
         MyPageInfoDto res = new MyPageInfoDto(user);
 
         if (ms.size()< 1){
-            return new MyPageInfoDto();
+            return new MyPageInfoDto(user);
         } else {
             return new MyPageInfoDto(user, ms.get(0));
         }

@@ -26,6 +26,6 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
-    private Boolean isDeleted;
+    private Boolean isDeleted=false;
 
 }
