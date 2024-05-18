@@ -19,8 +19,8 @@ public class MyPageInfoDto {
     private Date createdAt;
     private Date updatedAt;
 
-    private Integer level;
-    private Integer exp;
+    private Integer level=1;
+    private Integer exp=0;
 
     public MyPageInfoDto(User user){
         this.id = user.getId();
