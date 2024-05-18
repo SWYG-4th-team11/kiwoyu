@@ -66,25 +66,18 @@ public class UserService {
 
     //로그인
     public User authenticate(LoginRequest loginRequest) {
-        // 이메일로 사용자를 찾음
+
         Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
 
         if(userOptional.isPresent()) {
             User user = userOptional.get();
-            // 비밀번호 검증
+
             System.out.println(user.getPassword());
             System.out.println(loginRequest.getPassword());
-            if (
-                loginRequest.getPassword().contentEquals(user.getPassword())
-                || passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())
-                //TODO: remove raw comparison
-            ) {
-                // 비밀번호가 일치할시 해당 사용자 반환
-
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return user;
             }
         }
-        // 인증 실패
         throw new IllegalArgumentException("Invalid credentials");
     }
 
@@ -121,7 +114,7 @@ public class UserService {
         System.out.println("login success token: "+token);
         return new LoginResponse(user,token);
     }
-    // 마이페이지 정보 수정
+
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -148,12 +141,11 @@ public class UserService {
         if ((existingUserOptional.isPresent())) {
             User existingUser = existingUserOptional.get();
 
-            if (existingUser.getPassword().equals(updatePasswordRequestDto.getPassword())) {
-                String encryptedPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
-                existingUser.setPassword(encryptedPassword);
+            if (passwordEncoder.matches(updatePasswordRequestDto.getPassword(), existingUser.getPassword())) {
+                existingUser.setPassword(updatePasswordRequestDto.getNewPassword());
                 return userRepository.save(existingUser);
             } else {
-                throw new IllegalArgumentException("Password doesn't match");
+                throw new IllegalArgumentException("Current password doesn't match");
             }
         }else {
             throw new IllegalArgumentException("User not found");
