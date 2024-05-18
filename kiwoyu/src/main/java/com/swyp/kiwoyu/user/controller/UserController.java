@@ -5,11 +5,13 @@ import com.swyp.kiwoyu.goal.dto.UpdateGoalResponseDto;
 import com.swyp.kiwoyu.user.domain.User;
 import com.swyp.kiwoyu.user.dto.*;
 import com.swyp.kiwoyu.user.service.UserService;
+import jakarta.validation.Valid;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +118,14 @@ public class UserController {
 
     //비밀번호 변경
     @PostMapping("/update-password")
-    public ResponseEntity<User> updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto){
+    public ResponseEntity<User> updatePassword(@Valid @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            bindingResult.getFieldErrors().forEach(fieldError -> {
+                System.out.println(fieldError.getDefaultMessage());
+            });
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             String encryptedNewPassword = passwordEncoder.encode(updatePasswordRequestDto.getNewPassword());
             updatePasswordRequestDto.setNewPassword(encryptedNewPassword);
@@ -125,6 +134,7 @@ public class UserController {
 
             return ResponseEntity.ok(updatedUser);
         }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
