@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -28,17 +29,19 @@ public class EmailService {
     private final UserService userService;
 
     private final RedisUtil redisUtil;
+    private final PasswordEncoder passwordEncoder;
 
     // 이메일을 전송
     public String sendMail(EmailMessage emailMessage, String type)  {
         String authNum = createCode();
+        String encryptedAuthNum = passwordEncoder.encode(authNum);
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
             if (type.equals("password")){
                 try {
-                    userService.setTempPassword(emailMessage.getTo(), authNum);
+                    userService.setTempPassword(emailMessage.getTo(), encryptedAuthNum);
                 } catch (UserNotFoundException e) {
                     log.error("User not found with email", emailMessage.getTo(), e);
                     throw new UserNotFoundException("User not found with email " + emailMessage.getTo());

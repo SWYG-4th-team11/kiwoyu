@@ -54,8 +54,6 @@ public class UserController {
             LoginResponse lr = userService.generateLoginResponse(authenticatedUser);
             return ResponseEntity.ok(new LoginResponseDto("ok",lr, ""));
         } catch (IllegalArgumentException e) {
-            // 인증 실패
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             return ResponseEntity.ok(new LoginResponseDto("fail",null, "로그인 실패"));
 
         }
