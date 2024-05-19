@@ -154,7 +154,7 @@ public class UserService {
         MyPageInfoDto res = new MyPageInfoDto(user);
 
         if (ms.size()< 1){
-            return new MyPageInfoDto();
+            return new MyPageInfoDto(user);
         } else {
             return new MyPageInfoDto(user, ms.get(0));
         }
