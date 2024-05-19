@@ -22,6 +22,9 @@ public class MyPageInfoDto {
     private Integer level=1;
     private Integer exp=0;
 
+    private Boolean mandalartExists=false;
+    private Long mandalartId;
+
     public MyPageInfoDto(User user){
         this.id = user.getId();
         this.email = user.getEmail();
@@ -34,5 +37,8 @@ public class MyPageInfoDto {
         this(user);
         this.exp = mandalart.getExp();
         this.level = mandalart.getLevel();
+        this.mandalartExists = true;
+        this.mandalartId = mandalart.getId();
     }
+
 }
