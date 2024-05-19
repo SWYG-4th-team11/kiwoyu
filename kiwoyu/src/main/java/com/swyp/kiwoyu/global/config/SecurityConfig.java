@@ -48,6 +48,8 @@ public class SecurityConfig {
     private final List allowedPatterns = List.of(
             "http://*.swygbro.com",
             "https://*.swygbro.com",
+            "http://*.kiwoyu.link",
+            "https://*.kiwoyu.link",
             "http://localhost:3000"
     );
 
