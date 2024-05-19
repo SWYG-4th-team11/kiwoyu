@@ -30,10 +30,6 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<User> getUserByNickname(String nickname) { return userRepository.findByNickname(nickname);}
-
-    public Optional<User> getUserByEmail(String email) { return userRepository.findByEmail(email);}
-
     // 회원가입
     public SignUpResponseDto signUp(SignUpRequest signUpRequest) {
         try{
@@ -71,9 +67,6 @@ public class UserService {
 
         if(userOptional.isPresent()) {
             User user = userOptional.get();
-
-            System.out.println(user.getPassword());
-            System.out.println(loginRequest.getPassword());
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return user;
             }
@@ -82,11 +75,11 @@ public class UserService {
     }
 
 
-    public void setTempPassword(String email, String tempPassword) {
+    public void setTempPassword(String email, String encryptedTempPassword) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setPassword(tempPassword);
+            user.setPassword(encryptedTempPassword);
             userRepository.save(user);
         } else {
             throw new RuntimeException("User not found" + email);
@@ -145,7 +138,7 @@ public class UserService {
                 existingUser.setPassword(updatePasswordRequestDto.getNewPassword());
                 return userRepository.save(existingUser);
             } else {
-                throw new IllegalArgumentException("Current password doesn't match");
+                throw new IllegalArgumentException("Password doesn't match");
             }
         }else {
             throw new IllegalArgumentException("User not found");
